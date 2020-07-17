@@ -127,18 +127,12 @@ App({
           if (res.data.status === 1) {
             resolve(res.data);
           } else {
-            if (res.data.status == '-1') {
-              this.onLaunch();
-            }
-            wx.showToast({
-              title: `${res.data.info}`,
-              icon: 'none',
-            });
             reject(res.data.status);
           }
           wx.hideNavigationBarLoading();
         },
         fail: (err) => {
+          reject(err);
           wx.showToast({
             title: err.message,
             icon: 'none',
@@ -150,6 +144,9 @@ App({
   },
 
   async login() {
+    wx.showLoading({
+      title: '登录中...'
+    })
     return new Promise((resolve, reject) => {
       wx.login({
         success: (res) => {
@@ -163,36 +160,18 @@ App({
               'content-type': 'application/json',
             },
             success: (res) => {
-              this.globalData.sessionId = res.sessionId;
-              this.globalData.openId = res.openid;
+              this.globalData.sessionId = res.data.sessionId;
+              this.globalData.openId = res.data.openid;
+              wx.hideLoading()
               resolve(1);
             },
             fail: (err) => {
+              wx.hideLoading();
               wx.showToast({
                 title: '登录失败',
                 icon: 'none',
               });
             },
-          });
-        },
-      });
-    });
-  },
-
-  async getSessionId() {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.globalData.baseUrl}` + '/Common/get_session_id',
-        header: {
-          'content-type': 'application/json',
-        },
-        success: (res) => {
-          this.globalData.sessionId = res.data.sessionId;
-        },
-        fail: (err) => {
-          wx.showToast({
-            title: '调用异常',
-            icon: 'none',
           });
         },
       });

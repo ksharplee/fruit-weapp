@@ -1,2 +1,26 @@
 <!--index.wxml-->
-<van-button type="primary">按钮</van-button>
+<swiper
+  indicator-dots
+  autoplay
+  interval="{{2000}}"
+  duration="{{500}}"
+  indicator-color="rgba(255,255,255,.5)"
+  indicator-active-color="#4cbaab"
+  style="height:{{device.windowWidth * 0.5}}px;width:{{device.windowWidth}}px"
+>
+  <block
+    wx:for="{{banners}}"
+    wx:key="index"
+  >
+    <swiper-item>
+      <van-image use-loading-slot src="{{item.images}}" width="{{device.windowWidth}}" height="{{device.windowWidth * 0.5}}" fit="cover">
+        <van-loading
+          slot="loading"
+          type="spinner"
+          size="20"
+          vertical
+        />
+      </van-image>
+    </swiper-item>
+  </block>
+</swiper>

@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/user/index/index"
+    "pages/user/index/index",
+    "pages/goods/list/list"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -11,7 +12,14 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-    "van-button": "@vant/weapp/button/index"
+    "van-button": "@vant/weapp/button/index",
+    "van-search": "@vant/weapp/search/index",
+    "van-row": "@vant/weapp/row/index",
+    "van-col": "@vant/weapp/col/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-sticky": "@vant/weapp/sticky/index",
+    "van-loading": "@vant/weapp/loading/index",
+    "van-image": "@vant/weapp/image/index"
   },
   "tabBar": {
     "custom": false,
@@ -27,7 +35,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/goods/list/list",
         "iconPath": "images/icon-tabbar-bag.png",
         "selectedIconPath": "images/icon-tabbar-bag-active.png",
         "text": "商品"

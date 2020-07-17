@@ -1,0 +1,57 @@
+<!--pages/goods/list/list.wxml-->
+<view class="d-flex align-items-center bg-primary">
+  <view class="flex-grow-1">
+    <van-search
+      value="{{ searchStr }}"
+      shape="round"
+      background="#4cbaab"
+      placeholder="请输入搜索关键词"
+      bind:change="onInput"
+      bind:clear="onClear"
+      bind:search="onSearch"
+    />
+  </view>
+  <van-icon name="wap-nav" color="#fff" size="22px" custom-class="mr-3" />
+</view>
+<view class="content pt-3">
+  <view class="px-3">
+    <van-row gutter="20">
+      <van-col
+        wx:for="{{list.data}}"
+        wx:key="index"
+        span="12"
+        custom-class="mb-3"
+      >
+        <navigator url="" class="rounded overflow-hidden">
+          <van-image
+            lazy-load
+            src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
+            width="{{imgWidth}}"
+            height="{{imgWidth}}"
+            fit="contain"
+            custom-class="bg-white d-block"
+            use-loading-slot
+          >
+            <van-loading
+              slot="loading"
+              type="spinner"
+              size="20"
+              vertical
+            />
+          </van-image>
+          <view class="p-2 bg-white">
+            <view class="text-truncate mb-2">{{item.dnames}}</view>
+            <view class="text-danger h6 font-weight-bold">￥{{item.price}}</view>
+          </view>
+        </navigator>
+      </van-col>
+    </van-row>
+    <view class="text-center text-muted py-2">
+      <van-loading
+        wx:if="{{list.isMore || loading}}"
+        size="24px"
+      >加载中...</van-loading>
+      <view wx:else>没有更多了</view>
+    </view>
+  </view>
+</view>

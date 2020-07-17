@@ -5,13 +5,17 @@ const app = getApp();
 app.create(app.store, {
   data: {
     device: null,
+    banners: [],
+    goods: [],
   },
+
   //事件处理函数
   // bindViewTap: function() {
   //   wx.navigateTo({
   //     url: '../logs/logs'
   //   })
   // },
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({
@@ -39,11 +43,10 @@ app.create(app.store, {
         },
       });
     }
-    this.loadAd();
+    this.loadPageData();
   },
 
   getUserInfo: function (e) {
-    console.log(e);
     app.globalData.userInfo = e.detail.userInfo;
     this.setData({
       userInfo: e.detail.userInfo,
@@ -51,9 +54,17 @@ app.create(app.store, {
     });
   },
 
-  loadAd() {
-    app.getApi('/i/getAd').then((res) => {
-      console.log('函数: loadAd -> res', res);
+  /**
+   * 加载页面数据
+   *
+   */
+  loadPageData() {
+    const promises = [app.getApi('/i/getAd'), app.getApi('/i/getGoods')];
+    Promise.all(promises).then((res) => {
+      this.setData({
+        banners: res[0].data,
+        goods: res[1].data,
+      });
     });
   },
 
