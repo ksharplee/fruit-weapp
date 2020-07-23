@@ -1,2 +1,46 @@
 <!--pages/user/index/index.wxml-->
-<text>pages/user/index/index.wxml</text>
+<block wx:if="{{registered}}">
+  <van-cell
+    center
+    value-class="text-left"
+    custom-class="my-3"
+    is-link
+    url="/pages/user/info/info"
+  >
+    <view class="d-flex align-items-center">
+      <van-image
+        use-loading-slot
+        use-error-slot
+        src="{{userInfo.logo}}?x-oss-process=image/resize,m_fill,w_120"
+        width="60"
+        height="60"
+        round
+        fit="cover"
+        custom-class="d-block"
+      >
+        <van-loading
+          slot="loading"
+          type="spinner"
+          size="20"
+          vertical
+        />
+        <text slot="error">头像</text>
+      </van-image>
+      <view class="pl-3 text-dark">{{userInfo.userName}}</view>
+      <view class="ml-auto">编辑</view>
+    </view>
+  </van-cell>
+  <van-cell-group>
+    <van-cell title="姓名" value="{{userInfo.userName}}" />
+    <van-cell title="手机号码" value="{{userInfo.mobile}}" />
+    <van-cell title="电子邮箱" value="{{userInfo.email}}" />
+    <van-cell title="性别" value="{{userInfo.sex === '1' ? '男': '女'}}" />
+  </van-cell-group>
+</block>
+<view wx:else class="bg-primary p-4 text-center">
+  <van-button
+    type="default"
+    custom-class="px-4"
+    bind:click="navigateToRegister"
+  >立即注册</van-button>
+</view>

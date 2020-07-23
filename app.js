@@ -11,6 +11,8 @@ App({
     baseUrl: 'http://home.fruit.com',
     sessionId: '',
     openId: '',
+    prevUserId: '0',
+    secondUserId: '0'
   },
 
   onLaunch: function () {
@@ -109,9 +111,9 @@ App({
 
   async getApi(url, params = {}, contentType) {
     wx.showNavigationBarLoading();
-    if (!this.globalData.sessionId) {
-      await this.login();
-    }
+    // if (!this.globalData.sessionId) {
+    //   await this.login();
+    // }
     return new Promise((resolve, reject) => {
       wx.request({
         url: `${this.globalData.baseUrl + url}`,
@@ -126,7 +128,15 @@ App({
         success: (res) => {
           if (res.data.status === 1) {
             resolve(res.data);
+          } else if (res.status === -1001) {
+            this.login().then(res => {
+              this.getApi(url, params, contentType)
+            })
           } else {
+            wx.showToast({
+              title: res.info ? res.info : '调用失败，请重试',
+              icon: 'none',
+            });
             reject(res.data.status);
           }
           wx.hideNavigationBarLoading();
@@ -160,8 +170,14 @@ App({
               'content-type': 'application/json',
             },
             success: (res) => {
+              if (this.isObject(res.data.data)) {
+                this.globalData.secondUserId = res.data.data.secondUserId;
+                this.globalData.prevUserId = res.data.data.prevUserId;
+              }
               this.globalData.sessionId = res.data.sessionId;
-              this.globalData.openId = res.data.openid;
+              this.globalData.openId = res.data.openId;
+              this.store.data.userInfo = res.data.data;
+              this.store.update();
               wx.hideLoading()
               resolve(1);
             },
@@ -176,5 +192,19 @@ App({
         },
       });
     });
+  },
+
+  isArray(arr) {
+    if (Object.prototype.toString.call(arr) == "[object Array]") {
+      return true
+    }
+    return false
+  },
+
+  isObject(arr) {
+    if (Object.prototype.toString.call(arr) == '[object Object]') {
+      return true;
+    }
+    return false
   },
 });

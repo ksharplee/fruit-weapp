@@ -1,0 +1,6 @@
+/* pages/cart/index/index.wxss */
+
+.cart-empty .van-empty__image {
+  width: 120px;
+  height: 120px;
+}

@@ -2,7 +2,7 @@
 <swiper
   indicator-dots
   autoplay
-  interval="{{2000}}"
+  interval="{{5000}}"
   duration="{{500}}"
   indicator-color="rgba(255,255,255,.5)"
   indicator-active-color="#4cbaab"
@@ -24,3 +24,40 @@
     </swiper-item>
   </block>
 </swiper>
+<van-divider contentPosition="center" customStyle="color: #333; border-color: #ccc;">推荐商品</van-divider>
+<view class="px-3">
+  <van-row gutter="20">
+    <van-col
+      wx:for="{{goods}}"
+      wx:key="index"
+      span="12"
+      custom-class="mb-3"
+    >
+      <navigator
+        url="/pages/goods/detail/detail?id={{item.id}}"
+        class="rounded overflow-hidden"
+      >
+        <van-image
+          lazy-load
+          src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
+          width="{{imgWidth}}"
+          height="{{imgWidth}}"
+          fit="contain"
+          custom-class="bg-white d-block"
+          use-loading-slot
+        >
+          <van-loading
+            slot="loading"
+            type="spinner"
+            size="20"
+            vertical
+          />
+        </van-image>
+        <view class="p-2 bg-white">
+          <view class="mb-2"><text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text><text class="text-muted"> / {{item.unitName}}</text></view>
+          <view class="text-truncate mb-2">{{item.dnames}}</view>
+        </view>
+      </navigator>
+    </van-col>
+  </van-row>
+</view>

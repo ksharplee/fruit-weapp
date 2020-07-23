@@ -1,0 +1,13 @@
+/* pages/goods/detail/detail.wxss */
+
+.btn-active {
+  background-color: #ffe4de;
+  color: #ff5633;
+  border: 1px solid #fa411b;
+}
+
+.btn-default {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #f5f5f5;
+}

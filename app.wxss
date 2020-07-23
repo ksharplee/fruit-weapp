@@ -4,10 +4,19 @@
 page {
   font-size: 13px;
   background-color: #f5f5f5;
+  padding-bottom: 50px;
+  --dropdown-menu-title-font-size: 12px;
+  --button-primary-background-color: #4cbaab;
+  --button-primary-border-color: #4cbaab;
+  --tag-primary-color: #4cbaab;
+  --radio-border-color: #4cbaab;
+  --checkbox-border-color: #4cbaab;
+  --tabs-default-color: #4cbaab;
+  --button-danger-background-color: #ff8066;
+  --button-danger-border-color: #ff8066;
 }
 
 @media only screen and (min-width: 415px) {
-
   page,
   .font-size {
     font-size: 15px !important;
@@ -15,7 +24,6 @@ page {
 }
 
 @media only screen and (min-width: 481px) {
-
   page,
   .font-size {
     font-size: 16px !important;
@@ -23,7 +31,6 @@ page {
 }
 
 @media only screen and (min-width: 569px) {
-
   page,
   .font-size {
     font-size: 17px !important;
@@ -31,9 +38,18 @@ page {
 }
 
 @media only screen and (min-width: 641px) {
-
   page,
   .font-size {
     font-size: 18px !important;
   }
+}
+
+.footer {
+  position: fixed;
+  z-index: 100;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #eee;
+  background-color: #fff;
 }

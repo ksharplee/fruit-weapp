@@ -1,0 +1,193 @@
+<!--pages/goods/detail/detail.wxml-->
+<swiper
+  indicator-dots
+  autoplay
+  interval="{{5000}}"
+  duration="{{500}}"
+  indicator-color="rgba(255,255,255,.5)"
+  indicator-active-color="#4cbaab"
+  style="height:{{device.windowWidth}}px;width:{{device.windowWidth}}px"
+>
+  <block
+    wx:for="{{goods.BaseGoodImages}}"
+    wx:key="index"
+  >
+    <swiper-item>
+      <van-image
+        use-loading-slot
+        src="{{item}}?x-oss-process=image/resize,m_fill,w_750"
+        width="{{device.windowWidth}}"
+        height="{{device.windowWidth}}"
+        fit="cover"
+      >
+        <van-loading
+          slot="loading"
+          type="spinner"
+          size="20"
+          vertical
+        />
+      </van-image>
+    </swiper-item>
+  </block>
+</swiper>
+<view class="p-3 bg-white">
+  <view class="mb-2">
+    <text
+      class="text-danger h5 mb-0 font-weight-bold"
+    >￥{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].price : goods.price}}</text>
+    <text class="text-muted">/ {{goods.unitName}}</text>
+  </view>
+  <view class="h6 mb-0">{{goods.dnames}}</view>
+</view>
+<van-cell-group custom-class="my-2">
+  <van-cell
+    title="重量"
+    title-class="font-weight-bold"
+    value="{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].weight : goods.weight}}克"
+    center
+  ></van-cell>
+  <van-cell
+    title="货号"
+    title-class="font-weight-bold"
+    value="{{goods.dno}}"
+    center
+  ></van-cell>
+</van-cell-group>
+<van-cell-group
+  custom-class="my-2"
+  wx:if="{{ goods.BaseGoodDetail.length }}"
+>
+  <van-cell
+    title="{{goods.specInfo[0].specName}}"
+    title-class="font-weight-bold"
+    center
+    bind:click="showSpec"
+  >
+    {{goods.BaseGoodDetail[specIndex].dnames}}
+    <view
+      slot="right-icon"
+      class="ml-2"
+    >
+      <van-icon
+        name="weapp-nav"
+        color="#666"
+        custom-style="position:relative;top:2px"
+      />
+    </view>
+  </van-cell>
+  <!-- <van-cell
+    wx:for="{{ goods.BaseGoodDetail }}"
+    wx:key="id"
+    custom-class="pt-1 pb-2"
+    value-class="d-flex align-items-end justify-content-end"
+  >
+    <view slot="title">
+      {{ item.dnames}}
+    </view>
+    <view class="d-flex align-items-center">{{ item.price }} / {{ item.unitName }}</view>
+  </van-cell>-->
+</van-cell-group>
+<van-cell-group
+  wx:if="{{goods.detailDesc != ''}}"
+  custom-class="my-2"
+>
+  <van-cell>
+    <view
+      slot="title"
+      class="font-weight-bold"
+    >商品详情</view>
+  </van-cell>
+  <van-cell value-class="text-left text-dark">
+    <rich-text nodes="{{goods.detailDesc}}"></rich-text>
+  </van-cell>
+</van-cell-group>
+<van-goods-action>
+  <view class="ml-2"></view>
+  <van-goods-action-icon
+    icon="cart-o"
+    text="购物车"
+    info="{{cartList.length}}"
+    bind:click="onClickIcon"
+  />
+  <view class="mx-4"></view>
+  <van-goods-action-button
+    text="加入购物车"
+    type="warning"
+    bind:click="onClickAddToCart"
+  />
+  <van-goods-action-button
+    text="立即购买"
+    bind:click="onClickPurchase"
+  />
+</van-goods-action>
+<van-popup
+  show="{{ showSpec }}"
+  position="bottom"
+  custom-style="height: {{device.windowHeight * 0.75}}px"
+  round
+  closeable
+  bind:close="hideSpec"
+  bind:click-overlay="hideSpec"
+>
+  <!-- <van-picker
+    show-toolbar
+    title="商品规格"
+    columns="{{ columns }}"
+    bind:cancel="hideSpec"
+    bind:confirm="onConfirmPicker"
+  />-->
+  <view class="d-flex align-items-end p-3">
+    <van-image
+      use-loading-slot
+      src="{{goods.BaseGoodImages && goods.BaseGoodImages[0]}}?x-oss-process=image/resize,m_fill,w_300"
+      width="80"
+      height="80"
+      fit="cover"
+    >
+      <van-loading
+        slot="loading"
+        type="spinner"
+        size="20"
+        vertical
+      />
+    </van-image>
+    <view class="pl-3">
+      <view
+        class="h5 text-danger font-weight-bold"
+      >￥{{goods.BaseGoodDetail[currentSpecIndex].price}}</view>
+      <view class="text-muted">货号：{{goods.dno}}</view>
+    </view>
+  </view>
+  <view class="px-3">
+    <!-- 滚动区域高度为可视高度减去按钮区域高度和商品图片高度 -->
+    <scroll-view
+      style="height:{{device.windowHeight * 0.75 - 76 - 115}}px"
+      scroll-y="{{true}}"
+    >
+      <view class="mb-3 font-weight-bold">{{goods.specInfo[0].specName}}</view>
+      <view
+        wx:for="{{goods.BaseGoodDetail}}"
+        wx:key="index"
+        class="my-2 mr-2 rounded-pill py-2 px-3 {{index === currentSpecIndex ? 'btn-active' : 'btn-default'}}"
+        data-index="{{index}}"
+        bind:tap="changeCurrentSpecIndex"
+      >{{item.dnames}}</view>
+      <view class="py-2 d-flex align-items-center">
+        <view class="mr-auto font-weight-bold">数量</view>
+        <van-stepper
+          value="{{ goodsNumber }}"
+          bind:change="onChangeNumber"
+        />
+      </view>
+    </scroll-view>
+  </view>
+  <view class="bg-white p-3">
+    <van-button
+      type="danger"
+      round
+      block
+      loading="{{submitting}}"
+      bind:click="switchToCart"
+    >确定</van-button>
+  </view>
+</van-popup>

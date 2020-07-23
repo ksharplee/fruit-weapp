@@ -5,8 +5,10 @@ const app = getApp();
 app.create(app.store, {
   data: {
     device: null,
+    userInfo: null,
     banners: [],
     goods: [],
+    cartList: null
   },
 
   //事件处理函数
@@ -43,7 +45,18 @@ app.create(app.store, {
         },
       });
     }
+    this.setData({
+      imgWidth: (this.store.data.device.windowWidth - 50) / 2,
+    });
     this.loadPageData();
+  },
+
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 0,
+      });
+    }
   },
 
   getUserInfo: function (e) {
@@ -58,13 +71,33 @@ app.create(app.store, {
    * 加载页面数据
    *
    */
-  loadPageData() {
-    const promises = [app.getApi('/i/getAd'), app.getApi('/i/getGoods')];
+  async loadPageData() {
+    if (!app.globalData.sessionId) {
+      await app.login()
+    }
+    const promises = [
+      app.getApi('/i/getAd'),
+      app.getApi('/i/getGoods',{num: 10}),
+    ];
+    if (app.isObject(this.store.data.userInfo)) {
+      promises.push(
+        app.getApi('/c/lists', { userId: this.store.data.userInfo.id })
+      );
+    }
     Promise.all(promises).then((res) => {
       this.setData({
         banners: res[0].data,
         goods: res[1].data,
       });
+      if (app.isObject(this.store.data.userInfo)) {
+        if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+          this.getTabBar().setData({
+            info: res[2].data.length,
+          });
+        }
+        this.store.data.cartList = res[2].data;
+        this.update();
+      }
     });
   },
 

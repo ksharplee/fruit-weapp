@@ -11,8 +11,59 @@
       bind:search="onSearch"
     />
   </view>
-  <van-icon name="wap-nav" color="#fff" size="22px" custom-class="mr-3" />
+  <van-icon
+    name="wap-nav"
+    color="#fff"
+    size="22px"
+    custom-class="mr-3"
+  />
 </view>
+<!-- <van-tabbar
+  active="{{ active }}"
+  fixed="{{ false }}"
+  active-color="#4cbaab"
+  inactive-color="#333"
+  bind:change="onChangeTab"
+>
+  <van-tabbar-item
+    data-index="0"
+    bind:tap="onChangeTabbar"
+  >全部商品</van-tabbar-item>
+  <van-tabbar-item
+    data-index="1"
+    bind:tap="onChangeTabbar"
+  >
+    上传时间
+    <van-icon
+      name="{{ active === 1 ? sortStatus ? '/images/icon-caret-down-active.png' : '/images/icon-caret-up-active.png' :  '/images/icon-caret-down.png'}}"
+      size="10px"
+    />
+  </van-tabbar-item>
+  <van-tabbar-item
+    data-index="2"
+    bind:tap="onChangeTabbar"
+  >
+    价格
+    <van-icon
+      name="{{ active === 2 ? sortPrice ? '/images/icon-caret-down-active.png' : '/images/icon-caret-up-active.png' :  '/images/icon-caret-down.png'}}"
+      size="10px"
+    />
+  </van-tabbar-item>
+</van-tabbar> -->
+<van-dropdown-menu active-color="#4cbaab">
+  <van-dropdown-item
+    value="{{option}}"
+    options="{{goodsOption}}"
+    title-class="font-size-sm"
+  />
+  <van-dropdown-item
+    value="{{ sort }}"
+    options="{{ sortOption }}"
+    title-class="font-size-sm"
+    bind:change="onChangeDropdown"
+  />
+</van-dropdown-menu>
+
 <view class="content pt-3">
   <view class="px-3">
     <van-row gutter="20">
@@ -22,7 +73,10 @@
         span="12"
         custom-class="mb-3"
       >
-        <navigator url="" class="rounded overflow-hidden">
+        <navigator
+          url="/pages/goods/detail/detail?id={{item.id}}"
+          class="rounded overflow-hidden"
+        >
           <van-image
             lazy-load
             src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
@@ -40,8 +94,8 @@
             />
           </van-image>
           <view class="p-2 bg-white">
+            <view class="mb-2"><text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text><text class="text-muted"> / {{item.unitName}}</text></view>
             <view class="text-truncate mb-2">{{item.dnames}}</view>
-            <view class="text-danger h6 font-weight-bold">￥{{item.price}}</view>
           </view>
         </navigator>
       </van-col>

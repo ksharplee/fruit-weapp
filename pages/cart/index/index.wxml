@@ -1,0 +1,8 @@
+<!--pages/cart/index/index.wxml-->
+<view wx:if="{{cartList.length}}" class=""></view>
+<van-empty
+  wx:else
+  custom-class="cart-empty"
+  image="/images/cart-empty.png"
+  description="购物车空空如也"
+/>
