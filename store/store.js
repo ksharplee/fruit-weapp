@@ -3,7 +3,8 @@ export default {
     device: null,
     userInfo: null,
     categories: [],
-
+    cartChanged: false,
+    cartList: []
     // canIUse: wx.canIUse('button.open-type.getUserInfo'),
     // logs: [],
     // b: {

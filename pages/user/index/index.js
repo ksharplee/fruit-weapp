@@ -1,5 +1,6 @@
 // pages/user/index/index.js
 const app = getApp();
+import Dialog from '../../../miniprogram_npm/@vant/weapp/dialog/dialog';
 
 app.create(app.store, {
   /**
@@ -36,6 +37,7 @@ app.create(app.store, {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 3,
+        info: this.store.data.cartList.length,
       });
     }
   },
@@ -67,7 +69,27 @@ app.create(app.store, {
 
   navigateToRegister(e) {
     wx.navigateTo({
-      url: '/pages/register/register'
+      url: '/pages/register/register',
+    });
+  },
+
+  applyForAgency() {
+    Dialog.confirm({
+      title: '确定申请为代理吗？',
+      message: ' '
+    }).then(() => {
+      app
+      .getApi('/u/setUserDaili', {
+        id: this.store.data.userInfo.id,
+        isDaili: '1',
+      })
+      .then((res) => {
+        this.store.data.userInfo.isDaili = '1';
+        this.update();
+        wx.showToast({
+          title: '申请成功'
+        })
+      });
     })
   },
 });

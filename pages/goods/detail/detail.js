@@ -13,7 +13,6 @@ app.create(app.store, {
     showSpec: false,
     specIndex: 0,
     currentSpecIndex: 0,
-    columns: [],
     goodsNumber: 1,
     submitting: false
   },
@@ -125,12 +124,20 @@ app.create(app.store, {
         url: '/pages/register/register',
       });
     }
+    if (+this.goods.BaseGoodDetail[this.data.currentSpecIndex].stockNumber <= 0) {
+      wx.showToast({
+        title: '商品已售罄',
+        icon: 'none'
+      })
+      return;
+    }
     // goodDetailId,goodId unitId goodNumber jifen times
     const params = {
       userId: this.store.data.userInfo.id,
       goodId: this.data.goods.id,
       unitId: this.data.goods.unitId,
       goodNumber: this.data.goodsNumber,
+      goodDetailId: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].detailId,
       jifen: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].jifen,
       times: 1
     };

@@ -8,7 +8,9 @@ app.create(app.store, {
   data: {
     device: null,
     userInfo: null,
-    cartList: null
+    cartList: null,
+    changed: false,
+    result: [],
   },
 
   /**
@@ -33,8 +35,10 @@ app.create(app.store, {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 2,
+        info: this.store.data.cartList.length,
       });
     }
+    this.loadPageData();
   },
 
   /**
@@ -60,5 +64,28 @@ app.create(app.store, {
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {},
+  // onShareAppMessage: function () {},
+
+  loadPageData() {
+    if (this.store.data.cartChanged) {
+      app
+        .getApi('/c/lists', { userId: this.store.data.userInfo.id })
+        .then((res) => {
+          this.store.data.cartList = res.data;
+          this.store.data.cartChanged = false;
+          this.update();
+          if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+            this.getTabBar().setData({
+              info: res.data.length,
+            });
+          }
+        });
+    }
+  },
+
+  onChange(e) {
+    this.setData({
+      result: e.detail
+    })
+  },
 });

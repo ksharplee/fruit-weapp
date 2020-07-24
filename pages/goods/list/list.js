@@ -53,6 +53,7 @@ app.create(app.store, {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 1,
+        info: this.store.data.cartList.length,
       });
     }
   },

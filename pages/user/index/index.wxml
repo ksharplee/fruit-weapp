@@ -26,21 +26,51 @@
         />
         <text slot="error">头像</text>
       </van-image>
-      <view class="pl-3 text-dark">{{userInfo.userName}}</view>
+      <view class="pl-3 text-dark">
+        <view class="mr-2">{{userInfo.userName}}</view>
+        <van-tag
+          wx:if="{{userInfo.isDaili === '1'}}"
+          round
+          type="warning"
+        >代理</van-tag>
+      </view>
       <view class="ml-auto">编辑</view>
     </view>
   </van-cell>
   <van-cell-group>
-    <van-cell title="姓名" value="{{userInfo.userName}}" />
-    <van-cell title="手机号码" value="{{userInfo.mobile}}" />
-    <van-cell title="电子邮箱" value="{{userInfo.email}}" />
-    <van-cell title="性别" value="{{userInfo.sex === '1' ? '男': '女'}}" />
+    <van-cell
+      title="姓名"
+      value="{{userInfo.userName}}"
+    />
+    <van-cell
+      title="手机号码"
+      value="{{userInfo.mobile}}"
+    />
+    <van-cell
+      title="电子邮箱"
+      value="{{userInfo.email}}"
+    />
+    <van-cell
+      title="性别"
+      value="{{userInfo.sex === '1' ? '男': '女'}}"
+    />
+    <van-cell
+      wx:if="{{userInfo.isDaili === '0'}}"
+      title="申请为代理"
+      custom-class="mt-3"
+      is-link
+      bind:click="applyForAgency"
+    />
   </van-cell-group>
 </block>
-<view wx:else class="bg-primary p-4 text-center">
+<view
+  wx:else
+  class="bg-primary p-4 text-center"
+>
   <van-button
     type="default"
     custom-class="px-4"
     bind:click="navigateToRegister"
   >立即注册</van-button>
 </view>
+<van-dialog id="van-dialog" />

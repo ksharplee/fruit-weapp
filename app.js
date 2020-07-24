@@ -134,7 +134,7 @@ App({
             })
           } else {
             wx.showToast({
-              title: res.info ? res.info : '调用失败，请重试',
+              title: res.data.info ? res.data.info : '调用失败，请重试',
               icon: 'none',
             });
             reject(res.data.status);

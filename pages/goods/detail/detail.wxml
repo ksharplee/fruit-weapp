@@ -155,7 +155,8 @@
       <view
         class="h5 text-danger font-weight-bold"
       >￥{{goods.BaseGoodDetail[currentSpecIndex].price}}</view>
-      <view class="text-muted">货号：{{goods.dno}}</view>
+      <view class="text-muted mb-1">货号：{{goods.dno}}</view>
+      <view class="text-muted">库存：{{goods.BaseGoodDetail[currentSpecIndex].stockNumber}}</view>
     </view>
   </view>
   <view class="px-3">
