@@ -1,0 +1,6 @@
+/* pages/user/addressList/addressList.wxss */
+
+.address-empty .van-empty__image {
+  width: 115px;
+  height: 100px;
+}

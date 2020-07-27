@@ -1,5 +1,6 @@
 // pages/cart/index/index.js
 const app = getApp();
+import Dialog from '../../../miniprogram_npm/@vant/weapp/dialog/dialog';
 
 app.create(app.store, {
   /**
@@ -11,6 +12,10 @@ app.create(app.store, {
     cartList: null,
     changed: false,
     result: [],
+    checkedAll: false,
+    priceTotal: 0,
+    edit: false,
+    submitting: false,
   },
 
   /**
@@ -79,13 +84,142 @@ app.create(app.store, {
               info: res.data.length,
             });
           }
+          this.setData({
+            submitting: false,
+          });
         });
     }
   },
 
-  onChange(e) {
+  setPriceTotal() {
+    let price = 0;
+    this.data.result.map((item) => {
+      const goods = this.data.cartList[+item];
+      // if (+goods.goodNumber > +goods.stockNumber) {
+      //   wx.showToast({
+      //     title: '商品库存不足',
+      //     icon: 'none',
+      //   });
+      //   this.setData({
+      //     [`cartList[${item}].goodNumber`]: goods.stockNumber,
+      //   });
+      // }
+      price += +goods.price * +goods.goodNumber;
+    });
     this.setData({
-      result: e.detail
-    })
+      priceTotal: price * 100,
+    });
+  },
+
+  onChangeCheckGroup(e) {
+    if (e.detail.length === this.data.cartList.length) {
+      this.setData({
+        checkedAll: true,
+      });
+    } else {
+      this.setData({
+        checkedAll: false,
+      });
+    }
+    this.setData({
+      result: e.detail,
+    });
+    this.setPriceTotal();
+  },
+
+  onChangeCheckAll(e) {
+    if (this.data.result.length < this.store.data.cartList.length) {
+      const arr = [...new Array(this.data.cartList.length).keys()];
+      this.setData({
+        result: arr.map((item) => item + ''),
+        checkedAll: !this.data.checkedAll,
+      });
+    } else {
+      this.setData({
+        result: [],
+        checkedAll: !this.data.checkedAll,
+      });
+    }
+    this.setPriceTotal();
+  },
+
+  onChangeNumber(e) {
+    const { index } = e.currentTarget.dataset;
+    const stockNumber = +this.data.cartList[index].stockNumber;
+    app.getApi('/c/edit', {
+      userId: this.store.data.userInfo.id,
+      goodDetailId: this.data.cartList[index].detailId,
+      goodNumber: e.detail,
+    }).then(res => {
+      this.setData({
+        [`cartList[${index}].goodNumber`]: e.detail,
+      });
+      // if (stockNumber >= e.detail) {
+      //   this.setData({
+      //     [`cartList[${index}].goodNumber`]: e.detail,
+      //   });
+      // } else {
+      //   wx.showToast({
+      //     title: '商品库存不足',
+      //     icon: 'none',
+      //   });
+      //   this.setData({
+      //     [`cartList[${index}].goodNumber`]: stockNumber,
+      //   });
+      // }
+      this.setPriceTotal();
+    }).catch(err => {
+      this.setData({
+        [`cartList[${index}].goodNumber`]: stockNumber,
+      });
+      this.setPriceTotal();
+    });
+  },
+
+  onClickRight() {
+    if (!this.data.cartList.length) {
+      return;
+    }
+    this.setData({
+      edit: !this.data.edit,
+    });
+  },
+
+  onClickButton() {
+    if (this.data.edit && this.data.result.length) {
+      Dialog.confirm({
+        title: '确定删除吗？',
+        message: ' ',
+      }).then(() => {
+        this.setData({
+          submitting: true,
+        });
+        const detailId = this.data.result.map((item) => {
+          return this.data.cartList[+item].detailId;
+        });
+        app
+          .getApi('/c/delete', {
+            goodDetailId: JSON.stringify(detailId),
+            userId: this.store.data.userInfo.id,
+          })
+          .then((res) => {
+            wx.showToast({
+              title: '删除成功',
+            });
+            this.setData({
+              result: [],
+              checkedAll: false
+            })
+            this.store.data.cartChanged = true;
+            this.update();
+            this.loadPageData();
+          })
+          .catch((err) => {
+            this.setData({
+              submitting: false,
+            });
+          });
+      });
+    }
   },
 });

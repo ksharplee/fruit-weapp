@@ -48,6 +48,15 @@ App({
     wx.getSystemInfo({
       success: (res) => {
         this.store.data.device = res;
+        if (
+          res.model.substr(0, 8) === 'iPhone X' ||
+          res.model.substr(0, 8) === 'iPhone 1' ||
+          res.model.substr(0, 7) === 'unknown'
+        ) {
+          this.store.data.device.fixedFooter = res.safeArea.bottom -  res.safeArea.height + 40;
+        } else {
+          this.store.data.device.fixedFooter = 50;
+        }
       },
       fail: (err) => {
         wx.showToast({

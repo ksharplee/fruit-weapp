@@ -1,0 +1,19 @@
+<!--pages/user/addressList/addressList.wxml-->
+<view class="footer large">
+  <van-button
+    type="primary"
+    square
+    block
+    size="large"
+    bind:click="addAddress"
+  >添加收货地址</van-button>
+</view>
+<view class="content" style="padding-bottom:{{device.fixedFooter}}px">
+  <view wx:if="{{addressList.length}}"></view>
+  <van-empty
+    wx:else
+    custom-class="address-empty"
+    image="/images/address-empty.png"
+    description="暂无收货地址"
+  />
+</view>

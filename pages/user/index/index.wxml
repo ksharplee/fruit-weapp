@@ -37,7 +37,7 @@
       <view class="ml-auto">编辑</view>
     </view>
   </van-cell>
-  <van-cell-group>
+  <van-cell-group custom-class="my-3">
     <van-cell
       title="姓名"
       value="{{userInfo.userName}}"
@@ -60,6 +60,13 @@
       custom-class="mt-3"
       is-link
       bind:click="applyForAgency"
+    />
+  </van-cell-group>
+  <van-cell-group custom-class="my-3">
+    <van-cell
+      title="地址管理"
+      is-link
+      url="/pages/user/addressList/addressList"
     />
   </van-cell-group>
 </block>

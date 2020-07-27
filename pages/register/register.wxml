@@ -11,7 +11,7 @@
 </view>
 <view
   class="content"
-  style="padding-bottom:{{device.needFix ? device.safeArea.bottom -  device.safeArea.height + 40 : 50}}px"
+  style="padding-bottom:{{device.fixedFooter}}px"
 >
   <van-cell
     center

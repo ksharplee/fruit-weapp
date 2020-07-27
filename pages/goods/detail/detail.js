@@ -14,7 +14,8 @@ app.create(app.store, {
     specIndex: 0,
     currentSpecIndex: 0,
     goodsNumber: 1,
-    submitting: false
+    submitting: false,
+    info: 0,
   },
 
   /**
@@ -28,6 +29,9 @@ app.create(app.store, {
       app.globalData.prevUserId = prevUserId;
       app.globalData.secondUserId = secondUserId;
     }
+    this.setData({
+      info: this.store.data.cartList.length
+    })
     const { id } = options;
     this.loadPageData(id);
   },
@@ -68,13 +72,11 @@ app.create(app.store, {
   // onShareAppMessage: function () {},
 
   loadPageData(id) {
-    app
-      .getApi('/g/detail', { id })
-      .then((res) => {
-        this.setData({
-          goods: res.data,
-        });
+    app.getApi('/g/detail', { id }).then((res) => {
+      this.setData({
+        goods: res.data,
       });
+    });
   },
 
   showSpec() {
@@ -124,11 +126,14 @@ app.create(app.store, {
         url: '/pages/register/register',
       });
     }
-    if (+this.goods.BaseGoodDetail[this.data.currentSpecIndex].stockNumber <= 0) {
+    if (
+      +this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].stockNumber <=
+      0
+    ) {
       wx.showToast({
         title: '商品已售罄',
-        icon: 'none'
-      })
+        icon: 'none',
+      });
       return;
     }
     // goodDetailId,goodId unitId goodNumber jifen times
@@ -137,30 +142,45 @@ app.create(app.store, {
       goodId: this.data.goods.id,
       unitId: this.data.goods.unitId,
       goodNumber: this.data.goodsNumber,
-      goodDetailId: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].detailId,
+      goodDetailId: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex]
+        .detailId,
       jifen: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].jifen,
-      times: 1
+      times: 1,
     };
     this.setData({
-      submitting: true
-    })
-    app.getApi('/c/add', params).then((res) => {
-      this.setData({
-        submitting: false,
-      });
-      wx.switchTab({
-        url: '/pages/cart/index/index',
-      });
-    }).catch(err => {
-      this.setData({
-        submitting: false,
-      });
+      submitting: true,
     });
+    app
+      .getApi('/c/add', params)
+      .then((res) => {
+        this.setData({
+          submitting: false,
+          showSpec: false,
+        });
+        app
+          .getApi('/c/lists', { userId: this.store.data.userInfo.id })
+          .then((res) => {
+            this.store.data.cartList = res.data;
+            this.update();
+            this.setData({
+              submitting: false,
+              info: res.data.length,
+            });
+          });
+        wx.showToast({
+          title: '添加成功',
+        });
+      })
+      .catch((err) => {
+        this.setData({
+          submitting: false,
+        });
+      });
   },
 
   onChangeNumber(e) {
     this.setData({
-      goodsNumber: e.detail
-    })
+      goodsNumber: e.detail,
+    });
   },
 });

@@ -14,6 +14,11 @@ page {
   --tabs-default-color: #4cbaab;
   --button-danger-background-color: #ff8066;
   --button-danger-border-color: #ff8066;
+  --card-background-color: #fff;
+  --card-padding: 16px;
+  --nav-bar-title-text-color: #fff;
+  --nav-bar-background-color: #4cbaab;
+  --nav-bar-text-color: #fff
 }
 
 @media only screen and (min-width: 415px) {

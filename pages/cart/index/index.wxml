@@ -1,37 +1,67 @@
 <!--pages/cart/index/index.wxml-->
-<view
-  wx:if="{{cartList.length}}"
-  class
->
-  <van-checkbox-group
-    value="{{ result }}"
-    bind:change="onChange"
-  >
-    <view
-      wx:for="{{cartList}}"
-      wx:key="index"
-      class="d-flex align-items-center"
-    >
-      <van-checkbox
-        catch:tap="noop"
-        checked-color="#4cbaab"
-        name="{{ index }}"
-      />
-      <view class="col">
-        <van-card
-          num="2"
-          price="2.00"
-          desc="描述信息"
-          title="商品标题"
-          thumb="{{ item.image }}"
-        />
-      </view>
-    </view>
-  </van-checkbox-group>
-</view>
-<van-empty
-  wx:else
-  custom-class="cart-empty"
-  image="/images/cart-empty.png"
-  description="购物车空空如也"
+<van-nav-bar
+  title="购物车"
+  right-text="{{edit ? '取消' : '编辑'}}"
+  left-arrow="{{false}}"
+  fixed="{{true}}"
+  safe-area-inset-top="{{false}}"
+  bind:click-right="onClickRight"
 />
+<view class="content" style="padding-bottom:50px;padding-top:44px;">
+  <view wx:if="{{cartList.length}}">
+    <van-checkbox-group
+      value="{{ result }}"
+      bind:change="onChangeCheckGroup"
+    >
+      <view
+        wx:for="{{cartList}}"
+        wx:key="index"
+        class="d-flex align-items-center bg-white my-3"
+      >
+        <view class="pl-3">
+          <van-checkbox
+            catch:tap="noop"
+            checked-color="#4cbaab"
+            name="{{ index }}"
+          />
+        </view>
+        <view class="col">
+          <van-card
+            price="{{item.price}}"
+            title="{{item.goodsName}}"
+            thumb="{{ item.image }}"
+          >
+            <view slot="num">
+              <van-stepper value="{{ item.goodNumber }}" data-index="{{index}}" min="0" integer async-change bind:change="onChangeNumber" />
+            </view>
+            <view slot="desc">
+              <view class="mb-1 mt-2">{{item.specName}}</view>
+              <view>库存：{{item.stockNumber}}</view>
+            </view>
+          </van-card>
+        </view>
+      </view>
+    </van-checkbox-group>
+  </view>
+  <van-empty
+    wx:else
+    custom-class="cart-empty"
+    image="/images/cart-empty.png"
+    description="购物车空空如也"
+  />
+</view>
+<van-submit-bar
+  price="{{ edit ? ' ' : priceTotal }}"
+  button-text="{{edit ? '删除' : '去结算'}}"
+  label="{{edit ? ' ' : '合计：'}}"
+  loading="{{submitting}}"
+  bar-class="{{edit ? 'justify-content-between' : ''}}"
+  bind:submit="onClickButton"
+>
+  <van-checkbox
+    value="{{ checkedAll }}"
+    checked-color="#4cbaab"
+    bind:change="onChangeCheckAll"
+  >全选</van-checkbox>
+</van-submit-bar>
+<van-dialog id="van-dialog" />

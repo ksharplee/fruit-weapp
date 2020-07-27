@@ -1,0 +1,80 @@
+<!--pages/user/addressOperation/addressOperation.wxml-->
+<view class="footer large">
+  <van-button
+    type="primary"
+    square
+    block
+    size="large"
+    loading="{{submitting}}"
+    bind:click="onSubmit"
+  >提交</van-button>
+</view>
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
+>
+  <van-field
+    id="dnames"
+    value="{{contacter}}"
+    data-target="contacter"
+    data-name="姓名"
+    error-message="{{contacterErrors[0]}}"
+    error="{{contacterErrors.length}}"
+    error-message-align="right"
+    required
+    data-rules="required"
+    label="联系人"
+    input-class="text-right"
+    placeholder="请输入联系人"
+    bind:blur="onBlur"
+    bind:input="changeInput"
+  />
+  <van-field
+    id="mobile"
+    label="手机"
+    value="{{mobile}}"
+    input-class="text-right"
+    data-target="mobile"
+    data-name="手机号码"
+    data-rules="required|mobile"
+    error-message="{{mobileErrors[0]}}"
+    error-message-align="right"
+    type="number"
+    required
+    error="{{mobileErrors.length}}"
+    placeholder="请输入手机号"
+    bind:blur="onBlur"
+    bind:input="changeInput"
+  />
+  <van-cell
+    title="地区"
+    is-link
+    arrow-direction="down"
+    bind:click="showPopup"
+  >
+    <view style="color:{{addressPart ? '#333' : '#ccc'}}">{{addressPart ? addressPart : '请选择'}}</view>
+  </van-cell>
+  <van-field
+    value="{{ fullAddr }}"
+    label="详细地址"
+    type="textarea"
+    placeholder="请输入详细地址"
+    autosize
+    input-align="right"
+    border="{{ false }}"
+    bind:input="changeInput"
+  />
+</view>
+<van-popup
+  show="{{ show }}"
+  position="bottom"
+  custom-style="height: 45%;"
+  bind:close="hidePopup"
+>
+  <van-area
+    area-list="{{ areaList }}"
+    value="120102"
+    bind:cancel="hidePopup"
+    bind:confirm="getAddressPart"
+  />
+</van-popup>

@@ -16,7 +16,7 @@ app.create(app.store, {
     mobileErrors: [],
     email: '',
     sex: '1',
-    files: []
+    files: [],
   },
 
   /**
@@ -133,7 +133,7 @@ app.create(app.store, {
         {
           url: file.path,
           status: 'uploading',
-          message: '上传中'
+          message: '上传中',
         },
       ],
     });
@@ -149,7 +149,14 @@ app.create(app.store, {
       success(res) {
         const data = JSON.parse(res.data);
         // 上传完成需要更新 fileList
-        const arr = [{ path: data.picPath, status: 'done', message: '完成',deletable: true }];
+        const arr = [
+          {
+            path: data.picPath,
+            status: 'done',
+            message: '完成',
+            deletable: true,
+          },
+        ];
         that.setData({ [target]: arr });
       },
     });
@@ -175,7 +182,7 @@ app.create(app.store, {
           secondUserId: app.globalData.secondUserId,
           email: this.data.email,
           sex: this.data.sex,
-          logo: this.data.files[0].path
+          logo: this.data.files[0].path,
         })
         .then((res) => {
           this.store.data.userInfo = res.data;
