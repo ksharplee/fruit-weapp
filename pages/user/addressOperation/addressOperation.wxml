@@ -9,6 +9,13 @@
     bind:click="onSubmit"
   >提交</van-button>
 </view>
+<van-nav-bar
+  title="{{edit ? '编辑' : '添加'}}收货地址"
+  right-text="{{edit ? '删除' : ''}}"
+  left-arrow="{{false}}"
+  safe-area-inset-top="{{false}}"
+  bind:click-right="onClickRight"
+/>
 <view
   class="content"
   style="padding-bottom:{{device.fixedFooter}}px"
@@ -46,24 +53,66 @@
     bind:blur="onBlur"
     bind:input="changeInput"
   />
-  <van-cell
+  <!-- <van-cell
     title="地区"
     is-link
     arrow-direction="down"
     bind:click="showPopup"
   >
     <view style="color:{{addressPart ? '#333' : '#ccc'}}">{{addressPart ? addressPart : '请选择'}}</view>
-  </van-cell>
+  </van-cell>-->
+  <view bind:tap="showPopup">
+    <van-field
+      id="mobile"
+      label="地区"
+      value="{{addressPart}}"
+      input-class="text-right"
+      data-target="addressPart"
+      data-name="地区"
+      data-rules="required"
+      icon="arrow-down"
+      error-message="{{addressPartErrors[0]}}"
+      error-message-align="right"
+      type="number"
+      required
+      error="{{addressPartErrors.length}}"
+      placeholder="请选择地区"
+      readonly
+    />
+  </view>
   <van-field
+    id="fullAddr"
     value="{{ fullAddr }}"
     label="详细地址"
+    data-name="详细地址"
     type="textarea"
+    data-target="fullAddr"
     placeholder="请输入详细地址"
+    data-rules="required"
+    error-message="{{fullAddrErrors[0]}}"
+    error-message-align="right"
+    error="{{fullAddrErrors.length}}"
     autosize
     input-align="right"
     border="{{ false }}"
+    required
+    bind:blur="onBlur"
     bind:input="changeInput"
   />
+  <van-cell
+    title="设为默认地址"
+    custom-class="my-3"
+    center
+  >
+    <van-switch
+      slot="right-icon"
+      checked="{{ isDefault }}"
+      active-color="#4cbaab"
+      inactive-color="#fff"
+      size="24px"
+      bind:change="onChangeSwitch"
+    />
+  </van-cell>
 </view>
 <van-popup
   show="{{ show }}"
@@ -72,9 +121,11 @@
   bind:close="hidePopup"
 >
   <van-area
+    title="省市区"
     area-list="{{ areaList }}"
-    value="120102"
+    value="{{addressId}}"
     bind:cancel="hidePopup"
     bind:confirm="getAddressPart"
   />
 </van-popup>
+<van-dialog id="van-dialog" />

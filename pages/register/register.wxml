@@ -72,7 +72,6 @@
     input-class="text-right"
     data-target="email"
     error-message-align="right"
-    type="number"
     placeholder="请输入邮箱地址"
     bind:blur="onBlur"
     bind:input="changeInput"

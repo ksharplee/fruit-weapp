@@ -1,0 +1,10 @@
+<!--pages/notice/detail/detail.wxml-->
+<view class="content">
+  <view class="p-3">
+    <view class="h5">{{notice.title}}</view>
+    <view class="text-muted pb-3 border-bottom">{{notice.createTime}}</view>
+    <view class="rich-text-wrap py-3">
+      <rich-text nodes="{{notice.content}}"></rich-text>
+    </view>
+  </view>
+</view>

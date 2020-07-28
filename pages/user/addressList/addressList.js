@@ -9,14 +9,15 @@ app.create(app.store, {
     device: null,
     userInfo: null,
     addressList: null,
+    addressChanged: null,
+    selected: '',
+    edit: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    this.loadPageData();
-  },
+  onLoad: function (options) {},
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -26,7 +27,11 @@ app.create(app.store, {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {},
+  onShow: function () {
+    if (this.store.data.addressChanged) {
+      this.loadPageData();
+    }
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -58,7 +63,12 @@ app.create(app.store, {
       .getApi('/u/getUserAddress', { userId: this.store.data.userInfo.id })
       .then((res) => {
         this.store.data.addressList = res.data;
+        this.store.data.addressChanged = false;
         this.update();
+        const selectedItem = res.data.find((item) => item.isDefault === '1');
+        this.setData({
+          selected: selectedItem ? selectedItem.id : '',
+        });
       });
   },
 
@@ -66,5 +76,18 @@ app.create(app.store, {
     wx.navigateTo({
       url: '/pages/user/addressOperation/addressOperation',
     });
-  }
+  },
+
+  onChangeRadioGroup(e) {
+    this.setData({
+      selected: e.detail,
+    });
+  },
+
+  navigateToEdit(e) {
+    const { index } = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `/pages/user/addressOperation/addressOperation?index=${index}&&edit=1`,
+    });
+  },
 });

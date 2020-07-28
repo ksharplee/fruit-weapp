@@ -8,7 +8,9 @@ app.create(app.store, {
     userInfo: null,
     banners: [],
     goods: [],
-    cartList: null
+    cartList: null,
+    noticeList: null,
+    noticeInfo: 0,
   },
 
   //事件处理函数
@@ -74,16 +76,17 @@ app.create(app.store, {
    */
   async loadPageData() {
     if (!app.globalData.sessionId) {
-      await app.login()
+      await app.login();
     }
-    const promises = [
+    let promises = [
       app.getApi('/i/getAd'),
-      app.getApi('/i/getGoods',{num: 10}),
+      app.getApi('/i/getGoods', { num: 10 }),
     ];
     if (app.isObject(this.store.data.userInfo)) {
-      promises.push(
-        app.getApi('/c/lists', { userId: this.store.data.userInfo.id })
-      );
+      promises = promises.concat([
+        app.getApi('/n/lists', { userId: this.store.data.userInfo.id }),
+        app.getApi('/c/lists', { userId: this.store.data.userInfo.id }),
+      ]);
     }
     Promise.all(promises).then((res) => {
       this.setData({
@@ -91,12 +94,16 @@ app.create(app.store, {
         goods: res[1].data,
       });
       if (app.isObject(this.store.data.userInfo)) {
+        this.store.data.noticeList = res[2].data;
+        this.store.data.cartList = res[3].data;
+        this.setData({
+          noticeInfo: res[2].data.filter((item) => item.dStatus === '0').length,
+        });
         if (typeof this.getTabBar === 'function' && this.getTabBar()) {
           this.getTabBar().setData({
-            info: res[2].data.length,
+            info: res[3].data.length,
           });
         }
-        this.store.data.cartList = res[2].data;
         this.update();
       }
     });
@@ -106,4 +113,16 @@ app.create(app.store, {
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {},
+
+  onClickLeft() {
+    wx.navigateTo({
+      url: '/pages/register/register',
+    });
+  },
+
+  onClickRight() {
+    wx.navigateTo({
+      url: '/pages/notice/list/list',
+    });
+  },
 });

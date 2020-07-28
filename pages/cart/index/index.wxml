@@ -3,11 +3,10 @@
   title="购物车"
   right-text="{{edit ? '取消' : '编辑'}}"
   left-arrow="{{false}}"
-  fixed="{{true}}"
   safe-area-inset-top="{{false}}"
   bind:click-right="onClickRight"
 />
-<view class="content" style="padding-bottom:50px;padding-top:44px;">
+<view class="content" style="padding-bottom:50px;">
   <view wx:if="{{cartList.length}}">
     <van-checkbox-group
       value="{{ result }}"
@@ -35,8 +34,8 @@
               <van-stepper value="{{ item.goodNumber }}" data-index="{{index}}" min="0" integer async-change bind:change="onChangeNumber" />
             </view>
             <view slot="desc">
-              <view class="mb-1 mt-2">{{item.specName}}</view>
-              <view>库存：{{item.stockNumber}}</view>
+              <view class="mt-2">{{item.specName}}</view>
+              <!-- <view>积分倍率：{{item.times}}</view> -->
             </view>
           </van-card>
         </view>

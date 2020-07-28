@@ -19,3 +19,7 @@
 .usermotto {
   margin-top: 200px;
 } */
+
+.van-nav-bar__content {
+  height: 44px;
+}

@@ -12,7 +12,7 @@ App({
     sessionId: '',
     openId: '',
     prevUserId: '0',
-    secondUserId: '0'
+    secondUserId: '0',
   },
 
   onLaunch: function () {
@@ -53,7 +53,8 @@ App({
           res.model.substr(0, 8) === 'iPhone 1' ||
           res.model.substr(0, 7) === 'unknown'
         ) {
-          this.store.data.device.fixedFooter = res.safeArea.bottom -  res.safeArea.height + 40;
+          this.store.data.device.fixedFooter =
+            res.safeArea.bottom - res.safeArea.height + 40;
         } else {
           this.store.data.device.fixedFooter = 50;
         }
@@ -63,7 +64,7 @@ App({
           title: '无法读取设备信息，App展示效果将受到影响',
           icon: 'none',
         });
-      }
+      },
     });
 
     // 展示本地存储能力
@@ -137,10 +138,18 @@ App({
         success: (res) => {
           if (res.data.status === 1) {
             resolve(res.data);
-          } else if (res.status === -1001) {
-            this.login().then(res => {
-              this.getApi(url, params, contentType)
-            })
+          } else if (res.data.status === -1001) {
+            wx.showModal({
+              title: '登录失效',
+              content: '请点击确定重新登录',
+              confirmColor: '#4cbaab',
+              showCancel: false,
+              success: () => {
+                wx.reLaunch({
+                  url: '/pages/index/index',
+                });
+              },
+            });
           } else {
             wx.showToast({
               title: res.data.info ? res.data.info : '调用失败，请重试',
@@ -164,8 +173,8 @@ App({
 
   async login() {
     wx.showLoading({
-      title: '登录中...'
-    })
+      title: '登录中...',
+    });
     return new Promise((resolve, reject) => {
       wx.login({
         success: (res) => {
@@ -187,7 +196,7 @@ App({
               this.globalData.openId = res.data.openId;
               this.store.data.userInfo = res.data.data;
               this.store.update();
-              wx.hideLoading()
+              wx.hideLoading();
               resolve(1);
             },
             fail: (err) => {
@@ -204,16 +213,16 @@ App({
   },
 
   isArray(arr) {
-    if (Object.prototype.toString.call(arr) == "[object Array]") {
-      return true
+    if (Object.prototype.toString.call(arr) == '[object Array]') {
+      return true;
     }
-    return false
+    return false;
   },
 
   isObject(arr) {
     if (Object.prototype.toString.call(arr) == '[object Object]') {
       return true;
     }
-    return false
+    return false;
   },
 });

@@ -4,9 +4,11 @@ export default {
     userInfo: null,
     categories: [],
     cartChanged: false,
+    noticeList: [],
     cartList: [],
     addressList: [],
     fixedFooter: 0,
+    addressChanged: true,
     // canIUse: wx.canIUse('button.open-type.getUserInfo'),
     // logs: [],
     // b: {
