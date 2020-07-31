@@ -9,6 +9,8 @@ export default {
     addressList: [],
     fixedFooter: 0,
     addressChanged: true,
+    cateList: [],
+    selectedGoods: []
     // canIUse: wx.canIUse('button.open-type.getUserInfo'),
     // logs: [],
     // b: {

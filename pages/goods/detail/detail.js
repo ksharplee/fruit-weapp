@@ -146,9 +146,13 @@ app.create(app.store, {
         .detailId,
       jifen: this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].jifen,
       times: this.data.goods.times,
-      startTime: this.data.goods.startTime,
-      endTime: this.data.goods.endTime,
     };
+    if (this.data.goods.startTime) {
+      params.startTime = this.data.goods.startTime;
+    }
+    if (this.data.goods.endTime) {
+      params.endTime = this.data.goods.endTime;
+    }
     this.setData({
       submitting: true,
     });

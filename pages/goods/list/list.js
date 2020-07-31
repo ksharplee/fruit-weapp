@@ -29,6 +29,10 @@ app.create(app.store, {
     goodsOption: [{ text: '全部商品', value: '0' }],
     sort: '0',
     option: '0',
+    categoryId: '0',
+    mainActiveIndex: 0,
+    searchCategory: false,
+    categoryName: '',
   },
 
   /**
@@ -38,7 +42,7 @@ app.create(app.store, {
     this.setData({
       imgWidth: (this.store.data.device.windowWidth - 50) / 2,
     });
-    this.loadPageData({p: 1});
+    this.loadPageData({ p: 1 });
   },
 
   /**
@@ -55,6 +59,9 @@ app.create(app.store, {
         selected: 1,
         info: this.store.data.cartList.length,
       });
+    }
+    if (this.data.searchCategory) {
+      this.loadPageData({ p: 1 });
     }
   },
 
@@ -107,6 +114,7 @@ app.create(app.store, {
       .getApi('/g/lists', {
         searchStr: this.data.searchStr,
         order: this.data.sort,
+        categoryId: this.data.categoryId,
         ...params,
       })
       .then((res) => {
@@ -217,6 +225,21 @@ app.create(app.store, {
         hasMore: 1,
         p: 1,
       },
+    });
+    this.loadPageData({ p: 1 });
+  },
+
+  navigateToCategory() {
+    wx.navigateTo({
+      url: `/pages/goods/category/category?categoryId=${this.data.categoryId}&&index=${this.data.mainActiveIndex}`,
+    });
+  },
+
+  resetCategory() {
+    this.setData({
+      categoryId: '0',
+      categoryName: '',
+      mainActiveIndex: 0,
     });
     this.loadPageData({ p: 1 });
   },

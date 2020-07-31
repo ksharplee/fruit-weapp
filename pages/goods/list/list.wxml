@@ -12,10 +12,12 @@
     />
   </view>
   <van-icon
-    name="wap-nav"
+    name="apps-o"
     color="#fff"
     size="22px"
+    dot="{{categoryId !== '0'}}"
     custom-class="mr-3"
+    bind:click="navigateToCategory"
   />
 </view>
 <!-- <van-tabbar
@@ -49,23 +51,33 @@
       size="10px"
     />
   </van-tabbar-item>
-</van-tabbar> -->
-<van-dropdown-menu active-color="#4cbaab">
-  <van-dropdown-item
-    value="{{option}}"
-    options="{{goodsOption}}"
-    title-class="font-size-sm"
+</van-tabbar>-->
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
+>
+  <van-dropdown-menu active-color="#4cbaab">
+    <van-dropdown-item
+      value="{{option}}"
+      options="{{goodsOption}}"
+      title-class="font-size-sm"
+    />
+    <van-dropdown-item
+      value="{{ sort }}"
+      options="{{ sortOption }}"
+      title-class="font-size-sm"
+      bind:change="onChangeDropdown"
+    />
+  </van-dropdown-menu>
+  <van-notice-bar
+    wx:if="{{categoryId !== '0'}}"
+    left-icon="info-o"
+    text="当前分类：{{categoryName}}"
+    mode="closeable"
+    bind:close="resetCategory"
   />
-  <van-dropdown-item
-    value="{{ sort }}"
-    options="{{ sortOption }}"
-    title-class="font-size-sm"
-    bind:change="onChangeDropdown"
-  />
-</van-dropdown-menu>
 
-<view class="content pt-3">
-  <view class="px-3">
+  <view class="px-3 pt-3">
     <van-row gutter="20">
       <van-col
         wx:for="{{list.data}}"
@@ -94,7 +106,10 @@
             />
           </van-image>
           <view class="p-2 bg-white">
-            <view class="mb-2"><text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text><text class="text-muted"> / {{item.unitName}}</text></view>
+            <view class="mb-2">
+              <text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text>
+              <text class="text-muted">/ {{item.unitName}}</text>
+            </view>
             <view class="text-truncate mb-2">{{item.dnames}}</view>
           </view>
         </navigator>

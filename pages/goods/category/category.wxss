@@ -1,0 +1,27 @@
+/* pages/goods/category/category.wxss */
+
+page {
+  background-color: #f7f8fa;
+  --tree-select-nav-background-color: #fff;
+  --tree-select-content-background-color: #f7f8fa;
+  --sidebar-selected-background-color: #f7f8fa;
+  --sidebar-background-color: #fff;
+  --sidebar-selected-border-color: #4cbaab
+}
+
+.van-tree-select__item {
+  display: none;
+}
+
+.van-tree-select__content {
+  flex: 3 !important;
+  -webkit-flex: 3 !important;
+}
+
+.van-tree-select {
+  height: 100% !important;
+}
+
+.van-sidebar-item {
+  border-width: 5px !important;
+}

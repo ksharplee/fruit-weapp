@@ -4,7 +4,3 @@
   width: 115px;
   height: 100px;
 }
-
-.van-tag {
-  display: block !important;
-}

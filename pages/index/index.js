@@ -60,6 +60,9 @@ app.create(app.store, {
         info: this.store.data.cartList.length,
       });
     }
+    this.setData({
+      noticeInfo: this.store.data.noticeList.filter((item) => item.dStatus === '0').length,
+    });
   },
 
   getUserInfo: function (e) {

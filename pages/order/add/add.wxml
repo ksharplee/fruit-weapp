@@ -1,0 +1,88 @@
+<!--pages/order/add/add.wxml-->
+<van-submit-bar
+  price="{{ priceTotal }}"
+  button-text="提交订单"
+  loading="{{submitting}}"
+  label=" "
+  bar-class="justify-content-between"
+  bind:submit="onClickButton"
+/>
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter + 50}}px"
+>
+  <navigator
+    url="/pages/user/addressList/addressList?forSelect=1&&addressIndex={{addressIndex}}"
+    class="my-3 py-3 pl-3 pr-2 position-relative colored-line-bottom d-flex align-items-center bg-white shadow-sm rounded-lg overflow-hidden"
+  >
+    <view class="mr-auto">
+      <view class="mb-1 d-flex align-items-center">
+        <van-tag
+          wx:if="{{addressList[addressIndex].isDefault === '1'}}"
+          type="danger"
+          custom-class="mr-1"
+        >默认</van-tag>
+        {{addressList[addressIndex].addressPart}}
+      </view>
+      <view class="h5 mb-1">{{addressList[addressIndex].fullAddr}}</view>
+      <view>
+        <text style="width:100px">{{addressList[addressIndex].contacter}}</text>
+        {{addressList[addressIndex].mobile}}
+      </view>
+    </view>
+    <van-icon
+      name="arrow"
+      size="18px"
+      color="#999"
+    />
+  </navigator>
+  <view
+    wx:for="{{selectedGoods}}"
+    wx:key="index"
+    class="bg-white my-3 rounded-lg overflow-hidden"
+  >
+    <van-card
+      price="{{item.price}}"
+      title="{{item.goodsName}}"
+      thumb="{{ item.image }}"
+      num="{{item.goodNumber}}"
+    >
+      <view slot="desc">
+        <view class="mt-2">{{item.specName}}</view>
+      </view>
+    </van-card>
+  </view>
+  <view class="bg-white rounded-lg overflow-hidden">
+    <van-cell
+      title="商品金额"
+      value="￥{{price / 100}}"
+      value-class="text-danger"
+    />
+    <van-cell
+      title="积分优惠"
+      title-class="flex-none"
+    >
+      <view class="">
+        <van-switch
+          slot="right-icon"
+          checked="{{ useJifen }}"
+          active-color="#4cbaab"
+          inactive-color="#fff"
+          size="20px"
+          custom-class="d-inline-block"
+          bind:change="onChangeSwitch"
+        />
+        <view class>您当前有积分{{userInfo.jifen}}，可以抵用￥{{(0 + userInfo.jifen) / 10}}</view>
+      </view>
+    </van-cell>
+    <van-field
+      value="{{ memo }}"
+      label="留言"
+      type="textarea"
+      placeholder="请输入留言"
+      input-align="right"
+      autosize
+      bind:input="changeMemo"
+    />
+  </view>
+</view>

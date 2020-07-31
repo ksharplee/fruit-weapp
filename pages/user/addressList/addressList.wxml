@@ -14,7 +14,7 @@
 >
   <view wx:if="{{addressList.length}}">
     <van-radio-group
-      value="{{ selected }}"
+      value="{{ activeIndex }}"
       bind:change="onChangeRadioGroup"
     >
       <view
@@ -22,20 +22,50 @@
         wx:key="index"
         class="d-flex align-items-center bg-white my-3 py-3"
       >
-        <view class="px-3">
+        <view
+          wx:if="{{activeIndex === index && forSelect}}"
+          class="pl-3"
+          data-index="{{index}}"
+          bind:tap="setCurrentAddress"
+        >
           <van-radio
             catch:tap="noop"
             checked-color="#4cbaab"
-            name="{{ item.id }}"
+            name="{{ index }}"
           />
         </view>
-        <view class="col">
-          <view class="h6 d-flex align-items-center">{{item.contacter}} {{item.mobile}} <van-tag wx:if="{{item.isDefault === '1'}}" type="danger" round size="small" custom-class="ml-1">默认</van-tag></view>
-          <view class="text-muted">
-            {{ item.addressPart }} {{item.fullAddr}}
+        <view
+          class="col pl-3"
+          data-index="{{index}}"
+          bind:tap="setCurrentAddress"
+        >
+          <view class="h6 d-flex align-items-center">
+            <text style="width:100px">{{item.contacter}}</text>
+            {{item.mobile}}
+            <van-tag
+              wx:if="{{item.isDefault === '1'}}"
+              type="danger"
+              size="small"
+              custom-class="ml-1"
+            >默认</van-tag>
+          </view>
+          <view class="d-flex align-items-center">
+            <view
+              class="text-muted"
+              data-index="{{index}}"
+              bind:tap="setCurrentAddress"
+            >{{ item.addressPart }} {{item.fullAddr}}</view>
+            <view class="px-3 ml-auto">
+              <van-icon
+                name="edit"
+                size="18px"
+                color="#999"
+                data-index="{{index}}"
+                bind:click="navigateToEdit"
+              />
+            </view>
           </view>
         </view>
-        <view class="px-3 ml-auto"><van-icon name="edit" size="24px" color="#999" data-index="{{index}}" bind:click="navigateToEdit" /></view>
       </view>
     </van-radio-group>
   </view>

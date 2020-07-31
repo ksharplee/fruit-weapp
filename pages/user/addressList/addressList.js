@@ -10,14 +10,22 @@ app.create(app.store, {
     userInfo: null,
     addressList: null,
     addressChanged: null,
-    selected: '',
     edit: false,
+    activeIndex: 0,
+    forSelect: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {},
+  onLoad: function (options) {
+    if (options.forSelect) {
+      this.setData({
+        forSelect: true,
+        activeIndex: +options.addressIndex,
+      });
+    }
+  },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -59,17 +67,15 @@ app.create(app.store, {
   // onShareAppMessage: function () {},
 
   loadPageData() {
-    app
-      .getApi('/u/getUserAddress', { userId: this.store.data.userInfo.id })
-      .then((res) => {
-        this.store.data.addressList = res.data;
-        this.store.data.addressChanged = false;
-        this.update();
-        const selectedItem = res.data.find((item) => item.isDefault === '1');
-        this.setData({
-          selected: selectedItem ? selectedItem.id : '',
+    if (!this.store.data.addressList.lenth) {
+      app
+        .getApi('/u/getUserAddress', { userId: this.store.data.userInfo.id })
+        .then((res) => {
+          this.store.data.addressList = res.data;
+          this.store.data.addressChanged = false;
+          this.update();
         });
-      });
+    }
   },
 
   addAddress() {
@@ -80,7 +86,7 @@ app.create(app.store, {
 
   onChangeRadioGroup(e) {
     this.setData({
-      selected: e.detail,
+      activeIndex: e.detail,
     });
   },
 
@@ -89,5 +95,15 @@ app.create(app.store, {
     wx.navigateTo({
       url: `/pages/user/addressOperation/addressOperation?index=${index}&&edit=1`,
     });
+  },
+
+  setCurrentAddress(e) {
+    const { index } = e.currentTarget.dataset;
+    const pages = getCurrentPages();
+    const prevPage = pages[pages.length - 2];
+    prevPage.setData({
+      addressIndex: index,
+    });
+    wx.navigateBack()
   },
 });

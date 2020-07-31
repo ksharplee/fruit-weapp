@@ -1,0 +1,55 @@
+<!--pages/goods/category/category.wxml-->
+<view style="height:{{device.needFix ? device.screenHeight - 120 : device.windowHeight}}px">
+  <van-tree-select
+    items="{{ cateList }}"
+    main-active-index="{{ mainActiveIndex }}"
+    active-id="{{ categoryId }}"
+    bind:click-nav="onClickNav"
+    bind:click-item="onClickItem"
+  >
+    <view
+      slot="content"
+      class="bg-light p-3"
+    >
+      <view
+        class="h5 mb-3 d-flex align-items-center justify-content-between"
+        bind:tap="getCategoryGoods"
+      >
+        {{cateList[mainActiveIndex].text}}
+        <van-icon
+          name="arrow"
+          size="16px"
+          color="#999"
+        />
+      </view>
+      <view class="row bg-white rounded">
+        <view
+          wx:for="{{cateList[mainActiveIndex].children}}"
+          wx:key="index"
+          class="col-4 text-center"
+          data-index="{{index}}"
+          bind:tap="getCategoryGoods"
+        >
+          <view class="p-3">
+            <van-image
+              src="{{item.image}}"
+              width="{{(device.windowWidth * 0.75 - 32) / 3 - 32}}"
+              height="{{(device.windowWidth * 0.75 - 32) / 3 - 32}}"
+              custom-class="mx-auto"
+              fit="cover"
+              use-loading-slot
+            >
+              <van-loading
+                slot="loading"
+                type="spinner"
+                size="20"
+                vertical
+              />
+            </van-image>
+            <view class="text-truncate my-2 {{item.id === categoryId ? 'text-primary' : ''}}">{{item.text}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </van-tree-select>
+</view>

@@ -6,7 +6,7 @@
   safe-area-inset-top="{{false}}"
   bind:click-right="onClickRight"
 />
-<view class="content" style="padding-bottom:50px;">
+<view class="content" style="padding-bottom:{{device.fixedFooter + 50}}px">
   <view wx:if="{{cartList.length}}">
     <van-checkbox-group
       value="{{ result }}"
@@ -15,7 +15,7 @@
       <view
         wx:for="{{cartList}}"
         wx:key="index"
-        class="d-flex align-items-center bg-white my-3"
+        class="d-flex align-items-center bg-white my-3 rounded-lg overflow-hidden"
       >
         <view class="pl-3">
           <van-checkbox
