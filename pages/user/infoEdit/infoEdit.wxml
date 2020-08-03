@@ -1,0 +1,101 @@
+<!--pages/user/infoEdit/infoEdit.wxml-->
+<view class="footer large">
+  <van-button
+    type="primary"
+    square
+    block
+    size="large"
+    loading="{{submitting}}"
+    bind:click="onSubmit"
+  >提交</van-button>
+</view>
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
+>
+  <van-cell
+    center
+    custom-class="pr-0"
+  >
+    <view slot="title">头像</view>
+    <view class="pt-2">
+      <van-uploader
+        file-list="{{files}}"
+        max-size="4000000"
+        max-count="1"
+        preview-size="80px"
+        upload-icon="plus"
+        data-target="files"
+        bind:delete="deleteImg"
+        bind:oversize="oversize"
+        bind:after-read="afterRead"
+      />
+    </view>
+  </van-cell>
+  <van-field
+    id="dnames"
+    value="{{dnames}}"
+    data-target="dnames"
+    data-name="姓名"
+    error-message="{{dnamesErrors[0]}}"
+    error="{{dnamesErrors.length}}"
+    error-message-align="right"
+    required
+    data-rules="required"
+    label="姓名"
+    input-class="text-right"
+    placeholder="请输入姓名"
+    bind:blur="onBlur"
+    bind:input="changeInput"
+  />
+  <van-field
+    id="mobile"
+    label="手机"
+    value="{{mobile}}"
+    input-class="text-right"
+    data-target="mobile"
+    data-name="手机号码"
+    data-rules="required|mobile"
+    error-message="{{mobileErrors[0]}}"
+    error-message-align="right"
+    type="number"
+    required
+    error="{{mobileErrors.length}}"
+    placeholder="请输入手机号"
+    bind:blur="onBlur"
+    bind:input="changeInput"
+  />
+  <van-field
+    id="email"
+    label="电子邮箱"
+    value="{{email}}"
+    input-class="text-right"
+    data-target="email"
+    error-message-align="right"
+    type="number"
+    placeholder="请输入邮箱地址"
+    bind:blur="onBlur"
+    bind:input="changeInput"
+  />
+  <van-cell
+    title="性别"
+    center
+  >
+    <van-radio-group
+      value="{{ sex }}"
+      bind:change="onChangeSex"
+    >
+      <view class="d-flex align-items-center justify-content-end">
+        <van-radio
+          name="1"
+          checked-color="#4cbaab"
+          custom-class="mr-4"
+        >男</van-radio>
+        <van-radio
+          name="2"
+          checked-color="#4cbaab"
+        >女</van-radio>
+      </view>
+    </van-radio-group>
+  </van-cell>
+</view>

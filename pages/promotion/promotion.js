@@ -1,19 +1,19 @@
-// pages/notice/detail/detail.js
+// pages/promotion/promotion.js
 const app = getApp();
 
 app.create(app.store, {
   /**
    * 页面的初始数据
    */
-  data: {
-    notice: {},
-  },
+  data: {},
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.loadPageData(options.id, +options.index);
+    wx.setNavigationBarTitle({
+      title: options.title,
+    });
   },
 
   /**
@@ -50,20 +50,4 @@ app.create(app.store, {
    * 用户点击右上角分享
    */
   // onShareAppMessage: function () {},
-
-  loadPageData(id, index) {
-    app
-      .getApi('/n/detail', { userId: this.store.data.userInfo.id, msgId: id })
-      .then((res) => {
-        res.data.content = res.data.content.replace(
-          /\<img/g,
-          '<img style="max-width:100%;height:auto;display:block"'
-        );
-        this.setData({
-          notice: res.data,
-        });
-        this.store.data.noticeList[index].dStatus = '1';
-        this.update();
-      });
-  },
 });

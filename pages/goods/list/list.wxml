@@ -5,6 +5,8 @@
       value="{{ searchStr }}"
       shape="round"
       background="#4cbaab"
+      left-icon=" "
+      right-icon="search"
       placeholder="请输入搜索关键词"
       bind:change="onInput"
       bind:clear="onClear"
@@ -20,38 +22,6 @@
     bind:click="navigateToCategory"
   />
 </view>
-<!-- <van-tabbar
-  active="{{ active }}"
-  fixed="{{ false }}"
-  active-color="#4cbaab"
-  inactive-color="#333"
-  bind:change="onChangeTab"
->
-  <van-tabbar-item
-    data-index="0"
-    bind:tap="onChangeTabbar"
-  >全部商品</van-tabbar-item>
-  <van-tabbar-item
-    data-index="1"
-    bind:tap="onChangeTabbar"
-  >
-    上传时间
-    <van-icon
-      name="{{ active === 1 ? sortStatus ? '/images/icon-caret-down-active.png' : '/images/icon-caret-up-active.png' :  '/images/icon-caret-down.png'}}"
-      size="10px"
-    />
-  </van-tabbar-item>
-  <van-tabbar-item
-    data-index="2"
-    bind:tap="onChangeTabbar"
-  >
-    价格
-    <van-icon
-      name="{{ active === 2 ? sortPrice ? '/images/icon-caret-down-active.png' : '/images/icon-caret-up-active.png' :  '/images/icon-caret-down.png'}}"
-      size="10px"
-    />
-  </van-tabbar-item>
-</van-tabbar>-->
 <view
   class="content"
   style="padding-bottom:{{device.fixedFooter}}px"

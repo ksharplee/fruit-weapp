@@ -157,13 +157,21 @@ app.create(app.store, {
     app
       .getApi('/o/add', params)
       .then((res) => {
-        console.log('函数: onClickButton -> res', res);
-        wx.showToast({
-          title: '下单成功',
-        });
         this.setData({
           submitting: false,
         });
+        this.store.data.orderDetail = res.data;
+        this.update();
+        wx.redirectTo({
+          url: '/pages/order/detail/detail?loaded=1'
+        })
+        // wx.redirectTo({
+        //   url: `/pages/order/success/success?no=${res.data.orderNo}`,
+        //   success: () => {
+        //     this.store.data.cartChanged = true;
+        //     this.update();
+        //   },
+        // });
       })
       .catch((err) => {
         this.setData({

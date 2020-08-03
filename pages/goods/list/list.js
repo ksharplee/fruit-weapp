@@ -9,6 +9,7 @@ app.create(app.store, {
     device: null,
     imgWidth: null,
     loading: false,
+    goodsSearchStr: null,
     list: {
       totalItem: '',
       data: [],
@@ -42,6 +43,11 @@ app.create(app.store, {
     this.setData({
       imgWidth: (this.store.data.device.windowWidth - 50) / 2,
     });
+    if (this.store.data.goodsSearchStr) {
+      this.setData({
+        searchStr: this.store.data.goodsSearchStr,
+      });
+    }
     this.loadPageData({ p: 1 });
   },
 
@@ -122,10 +128,12 @@ app.create(app.store, {
         list.p = list.currentPage;
         this.setData({
           list,
-        });
-        this.setData({
           loading: false,
         });
+        if (this.store.data.goodsSearchStr) {
+          this.store.data.goodsSearchStr = '';
+          this.update();
+        }
         wx.stopPullDownRefresh();
       })
       .catch(() => {

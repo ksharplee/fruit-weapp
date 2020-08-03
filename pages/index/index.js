@@ -11,6 +11,7 @@ app.create(app.store, {
     cartList: null,
     noticeList: null,
     noticeInfo: 0,
+    searchStr: '',
   },
 
   //事件处理函数
@@ -61,7 +62,9 @@ app.create(app.store, {
       });
     }
     this.setData({
-      noticeInfo: this.store.data.noticeList.filter((item) => item.dStatus === '0').length,
+      noticeInfo: this.store.data.noticeList.filter(
+        (item) => item.dStatus === '0'
+      ).length,
     });
   },
 
@@ -72,6 +75,10 @@ app.create(app.store, {
       hasUserInfo: true,
     });
   },
+
+  /**
+   * 用户点击右上角分享
+   */ onShareAppMessage: function () {},
 
   /**
    * 加载页面数据
@@ -112,10 +119,25 @@ app.create(app.store, {
     });
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {},
+  onInput(e) {
+    this.setData({
+      searchStr: e.detail,
+    });
+  },
+
+  onSearch(e) {
+    this.store.data.goodsSearchStr = this.data.searchStr;
+    this.update();
+    wx.switchTab({
+      url: `/pages/goods/list/list?search`,
+    });
+  },
+
+  onClear(e) {
+    this.setData({
+      searchStr: '',
+    });
+  },
 
   onClickLeft() {
     wx.navigateTo({
@@ -127,5 +149,14 @@ app.create(app.store, {
     wx.navigateTo({
       url: '/pages/notice/list/list',
     });
+  },
+
+  navigateToPromotion(e) {
+    const { title, url } = e.currentTarget.dataset;
+    if (url) {
+      wx.navigateTo({
+        url: `${url}?${title}`,
+      });
+    }
   },
 });

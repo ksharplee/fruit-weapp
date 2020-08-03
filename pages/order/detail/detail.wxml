@@ -1,0 +1,17 @@
+<!--pages/order/detail/detail.wxml-->
+<view class="footer large">
+  <van-button
+    type="primary"
+    square
+    block
+    size="large"
+    loading="{{submitting}}"
+    bind:click="onSubmit"
+  >去付款</van-button>
+</view>
+<view class="content" style="padding-bottom:{{device.fixedFooter}}px">
+  <view class="bg-primary p-3 text-white">
+    <van-icon name="records" size="20px" color="#fff" />
+    订单状态：未付款
+  </view>
+</view>

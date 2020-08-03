@@ -1,4 +1,4 @@
-// pages/notice/detail/detail.js
+// pages/order/success/success.js
 const app = getApp();
 
 app.create(app.store, {
@@ -6,14 +6,16 @@ app.create(app.store, {
    * 页面的初始数据
    */
   data: {
-    notice: {},
+    orderNo: '',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.loadPageData(options.id, +options.index);
+    this.setData({
+      orderNo: options.no,
+    });
   },
 
   /**
@@ -51,19 +53,9 @@ app.create(app.store, {
    */
   // onShareAppMessage: function () {},
 
-  loadPageData(id, index) {
-    app
-      .getApi('/n/detail', { userId: this.store.data.userInfo.id, msgId: id })
-      .then((res) => {
-        res.data.content = res.data.content.replace(
-          /\<img/g,
-          '<img style="max-width:100%;height:auto;display:block"'
-        );
-        this.setData({
-          notice: res.data,
-        });
-        this.store.data.noticeList[index].dStatus = '1';
-        this.update();
-      });
+  returnToHome() {
+    wx.reLaunch({
+      url: '/pages/index/index'
+    });
   },
 });

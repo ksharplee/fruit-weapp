@@ -1,0 +1,17 @@
+<!--pages/order/success/success.wxml-->
+<view class="content px-3 pt-5 text-center">
+  <image
+    src="/images/icon-success.png"
+    style="width:100px;height:100px"
+    class="mb-3"
+  />
+  <view class="h6">下单成功</view>
+  <view class="text-muted my-3">
+    订单号：{{orderNo}}，您可以在
+    <navigator url class="d-inline-block text-primary">我的订单</navigator>
+    中查看
+  </view>
+  <view class="text-muted">
+    <van-button round bind:click="returnToHome">返回首页</van-button>
+  </view>
+</view>

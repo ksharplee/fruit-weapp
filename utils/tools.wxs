@@ -2,37 +2,30 @@ var toFixed = function (value) {
   return value.toFixed(2);
 }
 
-var subStr = function(str){
-  return str.substring(0,10)
-}
-
-var parseint = function(str){
-  return parseInt(str)
-}
-
-var isHas = function(str){
-  return str.indexOf(',')
-}
-
-var beforeDot = function (str) {
-  if (!str) {
-    return '0'
+var status = function (value) {
+  switch (value) {
+    case '1':
+      return '待付款'
+    case '2':
+      return '已取消'
+    case '4':
+      return '等待发货'
+    case '6':
+      return '已作废'
+    case '7':
+      return '部分发货'
+    case '8':
+      return '已发货'
+    case '9':
+      return '已收货'
+    case '10':
+      return '已完成'
+    default:
+      break;
   }
-  return str.split('.')[0]
-}
-
-var afterDot = function (str) {
-  if (!str) {
-    return '00'
-  }
-  return str.split('.')[1] ? str.split('.')[1] : '00'
 }
 
 module.exports = {
   toFixed: toFixed,
-  subStr: subStr,
-  parseint: parseint,
-  isHas: isHas,
-  beforeDot: beforeDot,
-  afterDot: afterDot
-}
+  status: status,
+};

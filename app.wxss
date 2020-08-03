@@ -18,6 +18,7 @@ page {
   --nav-bar-title-text-color: #fff;
   --nav-bar-background-color: #4cbaab;
   --nav-bar-text-color: #fff;
+  --info-background-color: #ff6c4e;
 }
 
 @media only screen and (min-width: 415px) {
@@ -62,9 +63,14 @@ page {
   display: block;
 }
 
-.van-tag {
-  display: block !important;
+.van-panel__header-value,
+.panel-index--van-panel__header-value {
+  color: #ff6c4e !important;
 }
+
+/* .van-tag {
+  display: block !important;
+} */
 
 .flex-none {
   flex: none !important;

@@ -73,6 +73,10 @@ app.create(app.store, {
 
   loadPageData(id) {
     app.getApi('/g/detail', { id }).then((res) => {
+      res.data.detailDesc = res.data.detailDesc.replace(
+        /\<img/g,
+        '<img style="max-width:100%;height:auto;display:block"'
+      );
       this.setData({
         goods: res.data,
       });

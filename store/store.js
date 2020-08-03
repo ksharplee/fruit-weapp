@@ -10,7 +10,10 @@ export default {
     fixedFooter: 0,
     addressChanged: true,
     cateList: [],
-    selectedGoods: []
+    selectedGoods: [],
+    orderDetail: {},
+    orderChanged: true,
+    goodsSearchStr: ''
     // canIUse: wx.canIUse('button.open-type.getUserInfo'),
     // logs: [],
     // b: {

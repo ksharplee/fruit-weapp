@@ -20,6 +20,10 @@
   margin-top: 200px;
 } */
 
+page {
+  background-color: #fff;
+}
+
 .van-nav-bar__content {
   height: 44px;
 }

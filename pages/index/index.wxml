@@ -10,7 +10,7 @@
     name="bell"
     size="20px"
     color="#fff"
-    info="{{noticeInfo}}"
+    info="{{noticeInfo ? noticeInfo : ''}}"
     slot="right"
   />
 </van-nav-bar>
@@ -32,27 +32,48 @@
       wx:key="index"
     >
       <swiper-item>
-        <van-image
-          use-loading-slot
-          src="{{item.images}}"
-          width="{{device.windowWidth}}"
-          height="{{device.windowWidth * 0.5}}"
-          fit="cover"
+        <view
+          data-url="{{item.links}}"
+          data-title="{{item.dnames}}"
+          bind:tap="navigateToPromotion"
         >
-          <van-loading
-            slot="loading"
-            type="spinner"
-            size="20"
-            vertical
-          />
-        </van-image>
+          <van-image
+            use-loading-slot
+            src="{{item.images}}"
+            width="{{device.windowWidth}}"
+            height="{{device.windowWidth * 0.5}}"
+            fit="cover"
+          >
+            <van-loading
+              slot="loading"
+              type="spinner"
+              size="20"
+              vertical
+            />
+          </van-image>
+        </view>
       </swiper-item>
     </block>
   </swiper>
-  <van-divider
-    contentPosition="center"
-    customStyle="color: #333; border-color: #ccc;"
-  >推荐商品</van-divider>
+  <van-search
+    value="{{ searchStr }}"
+    shape="round"
+    placeholder="请输入搜索关键词"
+    custom-class="mt-2"
+    left-icon=" "
+    right-icon="search"
+    bind:change="onInput"
+    bind:clear="onClear"
+    bind:search="onSearch"
+  />
+  <view class="p-3 d-flex align-items-center">
+    <view class="h6 mb-0">推荐商品</view>
+    <navigator
+      url="/pages/goods/list/list"
+      open-type="switchTab"
+      class="ml-auto text-muted"
+    >更多></navigator>
+  </view>
   <view class="px-3">
     <van-row gutter="20">
       <van-col
@@ -63,7 +84,7 @@
       >
         <navigator
           url="/pages/goods/detail/detail?id={{item.id}}"
-          class="rounded overflow-hidden"
+          class="rounded overflow-hidden bg-light"
         >
           <van-image
             lazy-load
@@ -81,7 +102,7 @@
               vertical
             />
           </van-image>
-          <view class="p-2 bg-white">
+          <view class="p-2">
             <view class="mb-2">
               <text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text>
               <text class="text-muted">/ {{item.unitName}}</text>

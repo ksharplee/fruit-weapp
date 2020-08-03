@@ -10,6 +10,8 @@ app.create(app.store, {
     device: null,
     userInfo: null,
     registered: false,
+    orderUnpayed: 0,
+    orderUnreceived: 0,
   },
 
   /**
@@ -40,6 +42,7 @@ app.create(app.store, {
         info: this.store.data.cartList.length,
       });
     }
+    this.loadPageData();
   },
 
   /**
@@ -67,29 +70,54 @@ app.create(app.store, {
    */
   onShareAppMessage: function () {},
 
-  navigateToRegister(e) {
+  navigateToRegister() {
     wx.navigateTo({
       url: '/pages/register/register',
+    });
+  },
+
+  navigateToInfo() {
+    wx.navigateTo({
+      url: '/pages/user/info/info',
     });
   },
 
   applyForAgency() {
     Dialog.confirm({
       title: '确定申请为代理吗？',
-      message: ' '
+      message: ' ',
     }).then(() => {
       app
-      .getApi('/u/setUserDaili', {
-        id: this.store.data.userInfo.id,
-        isDaili: '1',
-      })
-      .then((res) => {
-        this.store.data.userInfo.isDaili = '1';
-        this.update();
-        wx.showToast({
-          title: '申请成功'
+        .getApi('/u/setUserDaili', {
+          id: this.store.data.userInfo.id,
+          isDaili: '1',
         })
+        .then((res) => {
+          this.store.data.userInfo.isDaili = '1';
+          this.update();
+          wx.showToast({
+            title: '申请成功',
+          });
+        });
+    });
+  },
+
+  loadPageData() {
+    const orderUnpayed = app.getApi('/o/lists', { p: 1, dStatus: '1' });
+    const orderUnreceived = app.getApi('/o/lists', { p: 1, dStatus: '8' });
+    const promises = [orderUnpayed, orderUnreceived];
+    Promise.all(promises).then((res) => {
+      this.setData({
+        orderUnpayed: +res[0].data.totalItem,
+        orderUnreceived: +res[1].data.totalItem,
       });
-    })
+    });
+  },
+
+  navigateToOrderList(e) {
+    const { status } = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `/pages/order/list/list?status=${status}`,
+    });
   },
 });
