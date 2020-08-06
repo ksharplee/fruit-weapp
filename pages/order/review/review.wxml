@@ -1,0 +1,72 @@
+<!--pages/order/review/review.wxml-->
+<view class="footer large">
+  <van-button
+    type="primary"
+    square
+    block
+    size="large"
+    loading="{{submitting}}"
+    bind:click="onSubmit"
+  >提交</van-button>
+</view>
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
+>
+  <view
+    class="bg-white rounded-lg overflow-hidden"
+    style="border-top-left-radius:0;border-top-right-radius:0"
+  >
+    <van-card
+      title="{{goods.goodName}}"
+      custom-class="van-hairline--bottom"
+      desc="{{goods.goodDetailName}}"
+      thumb="{{ goods.image }}"
+    />
+    <van-cell
+      title="商品评价"
+      title-class="font-weight-bold"
+    >
+      <van-rate
+        value="{{ dStatus }}"
+        size="18"
+        allow-half
+        color="#ff6c4e"
+        void-color="#eee"
+        void-icon="star"
+        bind:change="onChangeRate"
+      />
+    </van-cell>
+  </view>
+  <view class="bg-white rounded-lg my-3 overflow-hidden">
+    <van-cell title="分享您的使用体验吧" />
+    <view class="px-3 pt-3 pb-2 van-hairline--bottom">
+      <van-uploader
+        file-list="{{files}}"
+        max-size="4000000"
+        max-count="5"
+        preview-size="80px"
+        upload-icon="plus"
+        bind:delete="deleteImg"
+        bind:oversize="oversize"
+        bind:after-read="afterRead"
+      />
+    </view>
+    <van-field
+      value="{{ content }}"
+      type="textarea"
+      left-icon="edit"
+      placeholder="感觉怎么样？跟大家分享一下吧"
+      placeholder-style="color:#666"
+      autosize="{{ {minHeight: 100} }}"
+      bind:change="onChangeTextarea"
+    />
+    <view class="p-3">
+      <van-checkbox
+        value="{{ anonymous }}"
+        checked-color="#4cbaab"
+        bind:change="onChangeCheckbox"
+      >匿名</van-checkbox>
+    </view>
+  </view>
+</view>

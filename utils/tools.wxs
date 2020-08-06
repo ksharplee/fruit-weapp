@@ -9,13 +9,13 @@ var status = function (value) {
     case '2':
       return '已取消'
     case '4':
-      return '等待发货'
+      return '待发货'
     case '6':
       return '已作废'
     case '7':
       return '部分发货'
     case '8':
-      return '已发货'
+      return '待收货'
     case '9':
       return '已收货'
     case '10':

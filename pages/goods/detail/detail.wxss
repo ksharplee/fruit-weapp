@@ -11,3 +11,27 @@
   color: #333;
   border: 1px solid #f5f5f5;
 }
+
+.header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.line-left-bold {
+  position: relative;
+  padding-left: 10px;
+}
+
+.line-left-bold::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  bottom: 6px;
+  left: 0;
+  width: 3px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  background-color: #fa411b;
+}

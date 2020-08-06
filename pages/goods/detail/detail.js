@@ -6,6 +6,7 @@ app.create(app.store, {
    * 页面的初始数据
    */
   data: {
+    active: '#goods',
     goods: {},
     device: null,
     cartList: null,
@@ -16,6 +17,15 @@ app.create(app.store, {
     goodsNumber: 1,
     submitting: false,
     info: 0,
+    selectedGoods: null,
+    direct: false,
+    goodsRecommend: null,
+    reviews: {
+      data: [],
+      p: 1,
+      totalItems: '',
+      hasMore: 1,
+    },
   },
 
   /**
@@ -30,8 +40,9 @@ app.create(app.store, {
       app.globalData.secondUserId = secondUserId;
     }
     this.setData({
-      info: this.store.data.cartList.length
-    })
+      info: this.store.data.cartList.length,
+      imgWidth: (this.store.data.device.windowWidth - 50) / 2,
+    });
     const { id } = options;
     this.loadPageData(id);
   },
@@ -72,13 +83,18 @@ app.create(app.store, {
   // onShareAppMessage: function () {},
 
   loadPageData(id) {
-    app.getApi('/g/detail', { id }).then((res) => {
-      res.data.detailDesc = res.data.detailDesc.replace(
+    const promieses = [
+      app.getApi('/g/detail', { id }),
+      app.getApi('/g/remarkLists', { p: 1, goodsId: id }),
+    ];
+    Promise.all(promieses).then((res) => {
+      res[0].data.detailDesc = res[0].data.detailDesc.replace(
         /\<img/g,
         '<img style="max-width:100%;height:auto;display:block"'
       );
       this.setData({
-        goods: res.data,
+        goods: res[0].data,
+        reviews: res[1].data,
       });
     });
   },
@@ -92,6 +108,7 @@ app.create(app.store, {
   hideSpec() {
     this.setData({
       showSpec: false,
+      specIndex: this.data.currentSpecIndex,
     });
   },
 
@@ -122,13 +139,19 @@ app.create(app.store, {
     });
   },
 
-  onClickPurchase(e) {},
+  onClickPurchase(e) {
+    this.setData({
+      showSpec: true,
+      direct: true,
+    });
+  },
 
   switchToCart() {
     if (app.isArray(this.store.data.userInfo)) {
       wx.navigateTo({
         url: '/pages/register/register',
       });
+      return;
     }
     if (
       +this.data.goods.BaseGoodDetail[this.data.currentSpecIndex].stockNumber <=
@@ -157,40 +180,85 @@ app.create(app.store, {
     if (this.data.goods.endTime) {
       params.endTime = this.data.goods.endTime;
     }
-    this.setData({
-      submitting: true,
-    });
-    app
-      .getApi('/c/add', params)
-      .then((res) => {
-        this.setData({
-          submitting: false,
-          showSpec: false,
-        });
-        app
-          .getApi('/c/lists', { userId: this.store.data.userInfo.id })
-          .then((res) => {
-            this.store.data.cartList = res.data;
-            this.update();
-            this.setData({
-              submitting: false,
-              info: res.data.length,
-            });
-          });
-        wx.showToast({
-          title: '添加成功',
-        });
-      })
-      .catch((err) => {
-        this.setData({
-          submitting: false,
-        });
+    if (this.data.direct) {
+      const goods = this.data.goods.BaseGoodDetail[this.data.currentSpecIndex];
+      this.store.data.selectedGoods = [
+        {
+          price: goods.price,
+          unitId: this.data.goods.unitId,
+          goodNumber: this.data.goodsNumber,
+          jifen: goods.jifen,
+          times: this.data.goods.times,
+          goodId: this.data.goods.id,
+          detailId: goods.detailId,
+          specName: goods.dnames,
+          goodsName: this.data.goods.dnames,
+          dno: this.data.goods.dno,
+          stockNumber: goods.stockNumber,
+          image: this.data.goods.BaseGoodImages.length
+            ? this.data.goods.BaseGoodImages[0]
+            : '',
+          unitName: this.data.goods.unitName,
+        },
+      ];
+      this.update();
+      this.setData({
+        showSpec: false,
       });
+      wx.navigateTo({
+        url: '/pages/order/add/add',
+        success: () => {
+          wx.showToast({
+            title: '下单成功',
+          });
+        },
+      });
+    } else {
+      this.setData({
+        submitting: true,
+      });
+      app
+        .getApi('/c/add', params)
+        .then((res) => {
+          this.setData({
+            submitting: false,
+            showSpec: false,
+          });
+          app
+            .getApi('/c/lists', { userId: this.store.data.userInfo.id })
+            .then((res) => {
+              this.store.data.cartList = res.data;
+              this.update();
+              this.setData({
+                submitting: false,
+                info: res.data.length,
+              });
+            });
+          wx.showToast({
+            title: '添加成功',
+          });
+        })
+        .catch((err) => {
+          this.setData({
+            submitting: false,
+          });
+        });
+    }
   },
 
   onChangeNumber(e) {
     this.setData({
       goodsNumber: e.detail,
+    });
+  },
+
+  onChangeTab(e) {
+    this.setData({
+      active: e.detail.name,
+    });
+    wx.pageScrollTo({
+      selector: e.detail.name,
+      duration: 300,
     });
   },
 });

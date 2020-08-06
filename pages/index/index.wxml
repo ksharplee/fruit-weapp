@@ -77,7 +77,7 @@
   <view class="px-3">
     <van-row gutter="20">
       <van-col
-        wx:for="{{goods}}"
+        wx:for="{{goodsRecommend}}"
         wx:key="index"
         span="12"
         custom-class="mb-3"

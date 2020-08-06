@@ -60,11 +60,11 @@
       bind:click="applyForAgency"
     />
   </van-cell-group>
-  <van-cell-group custom-class="my-3">
+  <!-- <van-cell-group custom-class="my-3">
     <van-cell
       title="地址管理"
       is-link
       url="/pages/user/addressList/addressList"
     />
-  </van-cell-group>
+  </van-cell-group> -->
 </view>

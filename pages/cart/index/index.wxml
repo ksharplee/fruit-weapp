@@ -25,19 +25,21 @@
           />
         </view>
         <view class="col">
-          <van-card
-            price="{{item.price}}"
-            title="{{item.goodsName}}"
-            thumb="{{ item.image }}"
-          >
-            <view slot="num">
-              <van-stepper value="{{ item.goodNumber }}" data-index="{{index}}" min="0" integer async-change bind:change="onChangeNumber" />
-            </view>
-            <view slot="desc">
-              <view class="mt-2">{{item.specName}}</view>
-              <!-- <view>积分倍率：{{item.times}}</view> -->
-            </view>
-          </van-card>
+          <navigator url="/pages/goods/detail/detail?id={{item.goodId}}">
+            <van-card
+              price="{{item.price}}"
+              title="{{item.goodsName}}"
+              thumb="{{ item.image }}"
+            >
+              <view slot="num">
+                <van-stepper value="{{ item.goodNumber }}" data-index="{{index}}" min="0" integer async-change bind:change="onChangeNumber" />
+              </view>
+              <view slot="desc">
+                <view class="mt-2">{{item.specName}}</view>
+                <!-- <view>积分倍率：{{item.times}}</view> -->
+              </view>
+            </van-card>
+          </navigator>
         </view>
       </view>
     </van-checkbox-group>

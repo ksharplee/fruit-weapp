@@ -62,8 +62,11 @@ app.create(app.store, {
         this.setData({
           notice: res.data,
         });
-        this.store.data.noticeList[index].dStatus = '1';
-        this.update();
+        if (this.store.data.noticeList[index].dStatus !== '1') {
+          this.store.data.noticeInfo = this.store.data.noticeInfo - 1;
+          this.store.data.noticeList[index].dStatus = '1';
+          this.update();
+        }
       });
   },
 });

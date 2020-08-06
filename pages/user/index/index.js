@@ -10,14 +10,22 @@ app.create(app.store, {
     device: null,
     userInfo: null,
     registered: false,
-    orderUnpayed: 0,
-    orderUnreceived: 0,
+    orderUnpayed: null,
+    orderUnreceived: null,
+    orderUnshipped: null,
+    orderPartlyShipped: null,
+    noticeInfo: null,
+    goodsRecommend: null,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {},
+  onLoad: function (options) {
+    this.setData({
+      imgWidth: (this.store.data.device.windowWidth - 50) / 2,
+    });
+  },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -35,6 +43,7 @@ app.create(app.store, {
       this.setData({
         registered: true,
       });
+      this.loadPageData();
     }
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
@@ -42,7 +51,6 @@ app.create(app.store, {
         info: this.store.data.cartList.length,
       });
     }
-    this.loadPageData();
   },
 
   /**
@@ -68,7 +76,13 @@ app.create(app.store, {
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {},
+  // onShareAppMessage: function () {},
+
+  navigateToNotice() {
+    wx.navigateTo({
+      url: '/pages/notice/list/list',
+    });
+  },
 
   navigateToRegister() {
     wx.navigateTo({
@@ -86,31 +100,61 @@ app.create(app.store, {
     Dialog.confirm({
       title: '确定申请为代理吗？',
       message: ' ',
-    }).then(() => {
-      app
-        .getApi('/u/setUserDaili', {
-          id: this.store.data.userInfo.id,
-          isDaili: '1',
-        })
-        .then((res) => {
-          this.store.data.userInfo.isDaili = '1';
-          this.update();
-          wx.showToast({
-            title: '申请成功',
+      asyncClose: true,
+    })
+      .then(() => {
+        app
+          .getApi('/u/setUserDaili', {
+            id: this.store.data.userInfo.id,
+            isDaili: '1',
+          })
+          .then((res) => {
+            this.store.data.userInfo.isDaili = '1';
+            this.update();
+            wx.showToast({
+              title: '申请成功',
+            });
+            Dialog.close();
           });
-        });
-    });
+      })
+      .catch(() => {
+        Dialog.close();
+      });
   },
 
   loadPageData() {
-    const orderUnpayed = app.getApi('/o/lists', { p: 1, dStatus: '1' });
-    const orderUnreceived = app.getApi('/o/lists', { p: 1, dStatus: '8' });
-    const promises = [orderUnpayed, orderUnreceived];
+    const orderUnpayed = app.getApi('/o/lists', {
+      p: 1,
+      dStatus: '1',
+      userId: this.store.data.userInfo.id,
+    });
+    const orderUnreceived = app.getApi('/o/lists', {
+      p: 1,
+      dStatus: '8',
+      userId: this.store.data.userInfo.id,
+    });
+    const orderUnshipped = app.getApi('/o/lists', {
+      p: 1,
+      dStatus: '4',
+      userId: this.store.data.userInfo.id,
+    });
+    const orderPartlyShipped = app.getApi('/o/lists', {
+      p: 1,
+      dStatus: '7',
+      userId: this.store.data.userInfo.id,
+    });
+    const promises = [
+      orderUnpayed,
+      orderUnreceived,
+      orderUnshipped,
+      orderPartlyShipped,
+    ];
     Promise.all(promises).then((res) => {
-      this.setData({
-        orderUnpayed: +res[0].data.totalItem,
-        orderUnreceived: +res[1].data.totalItem,
-      });
+      this.store.data.orderUnpayed = +res[0].data.totalItem;
+      this.store.data.orderUnreceived = +res[1].data.totalItem;
+      this.store.data.orderUnshipped = +res[2].data.totalItem;
+      this.store.data.orderPartlyShipped = +res[3].data.totalItem;
+      this.update();
     });
   },
 

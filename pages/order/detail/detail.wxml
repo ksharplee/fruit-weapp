@@ -1,17 +1,137 @@
 <!--pages/order/detail/detail.wxml-->
-<view class="footer large">
+<wxs
+  src="../../../utils/tools.wxs"
+  module="tools"
+/>
+<view
+  wx:if="{{orderDetail.dStatus === '1'}}"
+  class="footer large"
+>
   <van-button
     type="primary"
     square
     block
     size="large"
     loading="{{submitting}}"
-    bind:click="onSubmit"
+    bind:click="onPay"
   >去付款</van-button>
 </view>
-<view class="content" style="padding-bottom:{{device.fixedFooter}}px">
-  <view class="bg-primary p-3 text-white">
-    <van-icon name="records" size="20px" color="#fff" />
-    订单状态：未付款
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
+>
+  <view
+    class="bg-primary px-3 pt-3 pb-5 h6 mb-0 text-white d-flex align-items-center justify-content-center"
+  >
+    <van-icon
+      name="{{iconName}}"
+      size="20px"
+      color="#fff"
+    />
+    <view class="ml-2">{{tools.status(orderDetail.dStatus)}}</view>
+  </view>
+  <view
+    class="bg-white rounded-lg overflow-hidden p-3 d-flex align-items-start"
+    style="margin-top:-30px"
+  >
+    <van-icon
+      name="location-o"
+      color="#666"
+      size="20px"
+    />
+    <view class="ml-2">
+      <view class="font-weight-bold mb-2">
+        <text class="mr-2">{{orderDetail.contacter}}</text>
+        {{orderDetail.mobile}}
+      </view>
+      <view class="text-muted">{{orderDetail.addr}}</view>
+    </view>
+  </view>
+  <view class="bg-white my-3 rounded-lg overflow-hidden">
+    <view
+      class="px-3 py-2 font-weight-bold van-hairline--bottom"
+      style="margin-bottom: 1px"
+    >订单商品</view>
+    <navigator
+      wx:for="{{orderDetail.BusinessOrderDetail}}"
+      wx:key="index"
+      url="/pages/goods/detail/detail?id={{item.goodId}}"
+    >
+      <van-card
+        price="{{item.price}}"
+        title="{{item.goodName}}"
+        thumb="{{ item.image }}"
+        num="{{item.goodNumber}}"
+        custom-class="{{index < orderDetail.BusinessOrderDetail.length - 1 ? 'van-hairline--bottom' : ''}}"
+      >
+        <view slot="desc">
+          <view class="mt-2">{{item.goodDetailName}}</view>
+        </view>
+      </van-card>
+    </navigator>
+  </view>
+  <view class="bg-white my-3 rounded-lg overflow-hidden">
+    <van-cell
+      title="订单编号"
+      value="{{orderDetail.orderNo}}"
+    />
+    <van-cell
+      title="使用积分"
+      value="{{orderDetail.points}}"
+    />
+    <van-cell
+      title="优惠"
+      value="￥{{orderDetail.freeAmount}}"
+    />
+    <van-cell value-class="d-flex align-items-baseline justify-content-end text-dark">
+      实付款：
+      <view class="text-danger font-weight-bold">
+        ￥
+        <text class="h5 mb-0">{{orderDetail.actualAmount}}</text>
+      </view>
+    </van-cell>
+  </view>
+  <van-divider contentPosition="center">推荐商品</van-divider>
+  <view class="px-3 mb-3">
+    <van-row gutter="20">
+      <van-col
+        wx:for="{{goodsRecommend}}"
+        wx:key="index"
+        span="12"
+        custom-class="mb-3"
+      >
+        <navigator
+          url="/pages/goods/detail/detail?id={{item.id}}"
+          class="rounded overflow-hidden bg-white"
+        >
+          <van-image
+            lazy-load
+            src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
+            width="{{imgWidth}}"
+            height="{{imgWidth}}"
+            fit="contain"
+            custom-class="bg-white d-block"
+            use-loading-slot
+          >
+            <van-loading
+              slot="loading"
+              type="spinner"
+              size="20"
+              vertical
+            />
+          </van-image>
+          <view class="p-2">
+            <view class="mb-2">
+              <text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text>
+              <text class="text-muted">/ {{item.unitName}}</text>
+            </view>
+            <view class="text-truncate mb-2">{{item.dnames}}</view>
+          </view>
+        </navigator>
+      </van-col>
+    </van-row>
   </view>
 </view>
+<van-dialog id="van-dialog" />
+<!-- <view class="h6">订单号：{{orderDetail.orderNo}}</view>
+<view>{{orderDetail.createTime}}</view>-->

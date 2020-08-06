@@ -1,106 +1,206 @@
 <!--pages/goods/detail/detail.wxml-->
-<swiper
-  indicator-dots
-  autoplay
-  interval="{{5000}}"
-  duration="{{500}}"
-  indicator-color="rgba(255,255,255,.5)"
-  indicator-active-color="#4cbaab"
-  style="height:{{device.windowWidth}}px;width:{{device.windowWidth}}px"
->
-  <block
-    wx:for="{{goods.BaseGoodImages}}"
-    wx:key="index"
+<view class="header">
+  <van-tabs
+    active="{{ active }}"
+    color="#4cbaab"
+    bind:change="onChangeTab"
   >
-    <swiper-item>
-      <van-image
-        use-loading-slot
-        src="{{item}}?x-oss-process=image/resize,m_fill,w_750"
-        width="{{device.windowWidth}}"
-        height="{{device.windowWidth}}"
-        fit="cover"
-      >
-        <van-loading
-          slot="loading"
-          type="spinner"
-          size="20"
-          vertical
-        />
-      </van-image>
-    </swiper-item>
-  </block>
-</swiper>
-<view class="p-3 bg-white">
-  <view class="mb-2">
-    <text
-      class="text-danger h5 mb-0 font-weight-bold"
-    >￥{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].price : goods.price}}</text>
-    <text class="text-muted">/ {{goods.unitName}}</text>
-  </view>
-  <view class="h6 mb-0">{{goods.dnames}}</view>
+    <van-tab
+      title="商品"
+      name="#goods"
+    ></van-tab>
+    <van-tab
+      title="详情"
+      name="#detail"
+    ></van-tab>
+    <van-tab
+      title="评价"
+      name="#review"
+    ></van-tab>
+    <van-tab
+      title="推荐"
+      name="#recommend"
+    ></van-tab>
+  </van-tabs>
 </view>
-<van-cell-group custom-class="my-2">
-  <van-cell
-    title="重量"
-    title-class="font-weight-bold"
-    value="{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].weight : goods.weight}}克"
-    center
-  ></van-cell>
-  <van-cell
-    title="货号"
-    title-class="font-weight-bold"
-    value="{{goods.dno}}"
-    center
-  ></van-cell>
-</van-cell-group>
-<van-cell-group
-  custom-class="my-2"
-  wx:if="{{ goods.BaseGoodDetail.length }}"
+<view
+  class="content"
+  style="padding-bottom:{{device.fixedFooter}}px"
 >
-  <van-cell
-    title="{{goods.specInfo[0].specName}}"
-    title-class="font-weight-bold"
-    center
-    bind:click="showSpec"
-  >
-    {{goods.BaseGoodDetail[specIndex].dnames}}
-    <view
-      slot="right-icon"
-      class="ml-2"
+  <view id="goods">
+    <swiper
+      indicator-dots
+      autoplay
+      interval="{{5000}}"
+      duration="{{500}}"
+      indicator-color="rgba(255,255,255,.5)"
+      indicator-active-color="#4cbaab"
+      style="height:{{device.windowWidth}}px;width:{{device.windowWidth}}px"
     >
-      <van-icon
-        name="weapp-nav"
-        color="#666"
-        custom-style="position:relative;top:2px"
-      />
-    </view>
-  </van-cell>
-  <!-- <van-cell
-    wx:for="{{ goods.BaseGoodDetail }}"
-    wx:key="id"
-    custom-class="pt-1 pb-2"
-    value-class="d-flex align-items-end justify-content-end"
-  >
-    <view slot="title">
-      {{ item.dnames}}
-    </view>
-    <view class="d-flex align-items-center">{{ item.price }} / {{ item.unitName }}</view>
-  </van-cell>-->
-</van-cell-group>
-<van-cell-group
-  wx:if="{{goods.detailDesc != ''}}"
-  custom-class="my-2"
->
-  <van-cell>
+      <block
+        wx:for="{{goods.BaseGoodImages}}"
+        wx:key="index"
+      >
+        <swiper-item>
+          <van-image
+            use-loading-slot
+            src="{{item}}?x-oss-process=image/resize,m_fill,w_750"
+            width="{{device.windowWidth}}"
+            height="{{device.windowWidth}}"
+            fit="cover"
+          >
+            <van-loading
+              slot="loading"
+              type="spinner"
+              size="20"
+              vertical
+            />
+          </van-image>
+        </swiper-item>
+      </block>
+    </swiper>
     <view
-      slot="title"
-      class="font-weight-bold"
-    >商品详情</view>
-  </van-cell>
-  <van-cell value-class="text-left text-dark">
-    <rich-text nodes="{{goods.detailDesc}}"></rich-text>
-  </van-cell>
-</van-cell-group>
+      class="bg-white p-3 rounded-lg overflow-hidden mb-3"
+      style="border-top-left-radius:0 !important;border-top-right-radius:0 !important"
+    >
+      <view class="mb-2">
+        <text
+          class="text-danger h5 mb-0 font-weight-bold"
+        >￥{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].price : goods.price}}</text>
+        <text class="text-muted">/ {{goods.unitName}}</text>
+      </view>
+      <view class="h6 mb-0">{{goods.dnames}}</view>
+    </view>
+    <van-cell-group custom-class="bg-white rounded-lg overflow-hidden my-3">
+      <van-cell
+        title="重量"
+        title-class="font-weight-bold"
+        value="{{goods.BaseGoodDetail.length ? goods.BaseGoodDetail[specIndex].weight : goods.weight}}克"
+        center
+      ></van-cell>
+      <van-cell
+        title="货号"
+        title-class="font-weight-bold"
+        value="{{goods.dno}}"
+        center
+      ></van-cell>
+    </van-cell-group>
+    <van-cell-group
+      custom-class="bg-white rounded-lg overflow-hidden mb-3"
+      wx:if="{{ goods.BaseGoodDetail.length }}"
+    >
+      <van-cell
+        title="已选"
+        title-class="font-weight-bold"
+        center
+        bind:click="showSpec"
+      >
+        {{goods.BaseGoodDetail[specIndex].dnames}}，{{goodsNumber}} {{goods.unitName}}
+        <view
+          slot="right-icon"
+          class="ml-2"
+        >
+          <van-icon
+            name="weapp-nav"
+            color="#666"
+            custom-style="position:relative;top:2px"
+          />
+        </view>
+      </van-cell>
+      <!-- <van-cell
+        wx:for="{{ goods.BaseGoodDetail }}"
+        wx:key="id"
+        custom-class="pt-1 pb-2"
+        value-class="d-flex align-items-end justify-content-end"
+      >
+        <view slot="title">
+          {{ item.dnames}}
+        </view>
+        <view class="d-flex align-items-center">{{ item.price }} / {{ item.unitName }}</view>
+      </van-cell>-->
+    </van-cell-group>
+  </view>
+  <view
+    id="detail"
+    class="bg-white rounded-lg overflow-hidden my-3"
+  >
+    <van-cell-group wx:if="{{goods.detailDesc != ''}}">
+      <van-cell
+        title="商品详情"
+        title-class="font-weight-bold line-left-bold"
+      />
+      <van-cell value-class="text-left text-dark">
+        <rich-text nodes="{{goods.detailDesc}}"></rich-text>
+      </van-cell>
+    </van-cell-group>
+  </view>
+  <view
+    id="review"
+    class="bg-white rounded-lg overflow-hidden my-3"
+  >
+    <van-cell
+      title="评价"
+      title-class="font-weight-bold line-left-bold"
+      value="{{reviews.totalItem}}条评价"
+      is-link
+    />
+    <view class="p-3">
+      <view wx:if="{{reviews.data.length}}">1</view>
+      <view
+        wx:else
+        class="text-center text-muted"
+      >该商品暂无评价</view>
+    </view>
+  </view>
+  <view
+    id="recommend"
+    class="bg-white rounded-lg overflow-hidden my-3"
+  >
+    <van-cell
+      title="推荐商品"
+      title-class="font-weight-bold line-left-bold"
+    />
+    <view class="px-3 pt-3">
+      <van-row gutter="20">
+        <van-col
+          wx:for="{{goodsRecommend}}"
+          wx:key="index"
+          span="12"
+          custom-class="mb-3"
+        >
+          <navigator
+            url="/pages/goods/detail/detail?id={{item.id}}"
+            class="rounded overflow-hidden bg-light"
+          >
+            <van-image
+              lazy-load
+              src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
+              width="{{imgWidth}}"
+              height="{{imgWidth}}"
+              fit="contain"
+              custom-class="bg-white d-block"
+              use-loading-slot
+            >
+              <van-loading
+                slot="loading"
+                type="spinner"
+                size="20"
+                vertical
+              />
+            </van-image>
+            <view class="p-2">
+              <view class="mb-2">
+                <text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text>
+                <text class="text-muted">/ {{item.unitName}}</text>
+              </view>
+              <view class="text-truncate mb-2">{{item.dnames}}</view>
+            </view>
+          </navigator>
+        </van-col>
+      </van-row>
+    </view>
+  </view>
+</view>
 <van-goods-action>
   <view class="ml-2"></view>
   <van-goods-action-icon

@@ -4,7 +4,7 @@
   style="padding-bottom:{{device.fixedFooter}}px"
 >
   <block wx:if="{{registered}}">
-    <view class="bg-primary text-white p-3">
+    <view class="bg-primary text-white px-3 pt-3" style="padding-bottom:36px">
       <view class="d-flex align-items-center">
         <van-image
           use-loading-slot
@@ -33,17 +33,26 @@
             custom-style="display:inline-block"
           >代理</van-tag>
         </view>
-        <view class="ml-auto">
+        <view class="ml-auto d-inline-flex align-items-center">
+          <van-icon
+            name="comment-o"
+            size="22px"
+            color="#fff"
+            info="{{noticeInfo ? noticeInfo : ''}}"
+            bind:click="navigateToNotice"
+          />
           <van-icon
             name="setting-o"
             size="20px"
             color="#fff"
+            custom-class="ml-4"
             bind:click="navigateToInfo"
           />
         </view>
       </view>
     </view>
     <view class="px-3">
+      <view class="bg-white rounded-lg overflow-hidden mb-3" style="margin-top:-24px"><van-cell title="地址管理" url="/pages/user/addressList/addressList" is-link /></view>
       <view class="bg-white rounded-lg overflow-hidden my-3">
         <van-cell
           title="我的订单"
@@ -64,16 +73,17 @@
           <van-grid-item
             icon="logistics"
             icon-color="#4cbaab"
-            text="待收货"
-            data-status="8"
-            info="{{orderUnreceived ? orderUnreceived : ''}}"
+            text="待发货"
+            data-status="4"
+            info="{{orderUnshipped ? orderUnshipped : ''}}"
             bind:click="navigateToOrderList"
           />
           <van-grid-item
-            icon="orders-o"
-            text="已作废"
-            data-status="9"
+            icon="logistics"
             icon-color="#4cbaab"
+            text="待收货"
+            data-status="8"
+            info="{{orderUnreceived ? orderUnreceived : ''}}"
             bind:click="navigateToOrderList"
           />
           <van-grid-item
@@ -96,6 +106,46 @@
       custom-class="px-4"
       bind:click="navigateToRegister"
     >立即注册</van-button>
+  </view>
+  <van-divider contentPosition="center">推荐商品</van-divider>
+  <view class="px-3 mb-3">
+    <van-row gutter="20">
+      <van-col
+        wx:for="{{goodsRecommend}}"
+        wx:key="index"
+        span="12"
+        custom-class="mb-3"
+      >
+        <navigator
+          url="/pages/goods/detail/detail?id={{item.id}}"
+          class="rounded overflow-hidden bg-white"
+        >
+          <van-image
+            lazy-load
+            src="{{item.image}}?x-oss-process=image/resize,m_lfit,w_375,h_375"
+            width="{{imgWidth}}"
+            height="{{imgWidth}}"
+            fit="contain"
+            custom-class="bg-white d-block"
+            use-loading-slot
+          >
+            <van-loading
+              slot="loading"
+              type="spinner"
+              size="20"
+              vertical
+            />
+          </van-image>
+          <view class="p-2">
+            <view class="mb-2">
+              <text class="text-danger h6 mb-0 font-weight-bold">￥{{item.price}}</text>
+              <text class="text-muted">/ {{item.unitName}}</text>
+            </view>
+            <view class="text-truncate mb-2">{{item.dnames}}</view>
+          </view>
+        </navigator>
+      </van-col>
+    </van-row>
   </view>
   <van-dialog id="van-dialog" />
 </view>

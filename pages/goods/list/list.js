@@ -100,9 +100,11 @@ app.create(app.store, {
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    this.loadPageData({
-      p: +this.data.list.p + 1,
-    });
+    if (this.data.list.hasMore) {
+      this.loadPageData({
+        p: +this.data.list.p + 1,
+      });
+    }
   },
 
   /**

@@ -15,6 +15,7 @@ app.create(app.store, {
     addressIndex: 0,
     memo: '',
     useJifen: false,
+    points: 0,
     submitting: false,
   },
 
@@ -70,15 +71,15 @@ app.create(app.store, {
     this.setData({
       useJifen: e.detail,
     });
-    if (e.detail) {
-      this.setData({
-        priceTotal: this.data.price - +this.store.data.userInfo.jifen * 10,
-      });
-    } else {
-      this.setData({
-        priceTotal: this.data.price,
-      });
-    }
+    // if (e.detail) {
+    //   this.setData({
+    //     priceTotal: this.data.price - +this.store.data.userInfo.jifen * 10,
+    //   });
+    // } else {
+    //   this.setData({
+    //     priceTotal: this.data.price,
+    //   });
+    // }
   },
 
   loadPageData() {
@@ -113,6 +114,39 @@ app.create(app.store, {
     });
   },
 
+  changeJifen(e) {
+    this.setData({
+      points: e.detail,
+    });
+  },
+
+  checkJifen(e) {
+    let jifen = e.detail.value;
+    if (jifen > +this.data.userInfo.jifen) {
+      wx.showToast({
+        title: '您的积分不足',
+        icon: 'none',
+      });
+      jifen = +this.data.userInfo.jifen;
+    } else if (jifen < 0) {
+      wx.showToast({
+        title: '积分不能小于0',
+        icon: 'none',
+      });
+      jifen = 0;
+    } else if (jifen / 10 > this.data.price / 100) {
+      jifen = (this.data.price / 100) * 10;
+      wx.showToast({
+        title: `您本单只需消耗积分${jifen}分`,
+        icon: 'none',
+      });
+    }
+    this.setData({
+      points: jifen,
+      priceTotal: this.data.price - jifen * 10,
+    });
+  },
+
   // 提交订单
   onClickButton() {
     if (this.addressIndex === -1) {
@@ -140,6 +174,9 @@ app.create(app.store, {
         price: item.price,
         amount: +item.price * +item.goodNumber,
         image: item.image,
+        jifen: item.jifen,
+        times: item.times,
+        singleAmountJiFen: +item.jifen * +item.times * +item.goodNumber,
       };
     });
     const params = {
@@ -153,7 +190,10 @@ app.create(app.store, {
       actualAmount: (this.data.priceTotal - freeAmount) / 100,
       memo: this.data.memo,
       BusinessOrderDetail: JSON.stringify(BusinessOrderDetail),
+      points: Math.floor(this.data.points),
     };
+    console.log("函数: onClickButton -> params", params)
+    // return
     app
       .getApi('/o/add', params)
       .then((res) => {
@@ -161,10 +201,22 @@ app.create(app.store, {
           submitting: false,
         });
         this.store.data.orderDetail = res.data;
+        this.store.data.selectedGoods = [];
+        const pages = getCurrentPages();
+        const prevPage = pages[pages.length - 2];
+        const prevData = prevPage.data;
+        if (prevPage.route === 'pages/cart/index/index') {
+          // 根据购物车页面的result删除商品
+          const arr = JSON.parse(JSON.stringify(this.store.data.cartList));
+          prevData.result.map((item) => {
+            arr.splice(+item, 1);
+          });
+          this.store.data.cartList = arr;
+        }
         this.update();
         wx.redirectTo({
-          url: '/pages/order/detail/detail?loaded=1'
-        })
+          url: '/pages/order/detail/detail?loaded=1',
+        });
         // wx.redirectTo({
         //   url: `/pages/order/success/success?no=${res.data.orderNo}`,
         //   success: () => {

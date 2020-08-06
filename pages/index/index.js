@@ -7,10 +7,10 @@ app.create(app.store, {
     device: null,
     userInfo: null,
     banners: [],
-    goods: [],
+    goodsRecommend: null,
     cartList: null,
     noticeList: null,
-    noticeInfo: 0,
+    noticeInfo: null,
     searchStr: '',
   },
 
@@ -61,11 +61,11 @@ app.create(app.store, {
         info: this.store.data.cartList.length,
       });
     }
-    this.setData({
-      noticeInfo: this.store.data.noticeList.filter(
-        (item) => item.dStatus === '0'
-      ).length,
-    });
+    // this.setData({
+    //   noticeInfo: this.store.data.noticeList.filter(
+    //     (item) => item.dStatus === '0'
+    //   ).length,
+    // });
   },
 
   getUserInfo: function (e) {
@@ -101,21 +101,24 @@ app.create(app.store, {
     Promise.all(promises).then((res) => {
       this.setData({
         banners: res[0].data,
-        goods: res[1].data,
       });
+      this.store.data.goodsRecommend = res[1].data;
       if (app.isObject(this.store.data.userInfo)) {
         this.store.data.noticeList = res[2].data;
         this.store.data.cartList = res[3].data;
-        this.setData({
-          noticeInfo: res[2].data.filter((item) => item.dStatus === '0').length,
-        });
+        // this.setData({
+        //   noticeInfo: res[2].data.filter((item) => item.dStatus === '0').length,
+        // });
+        this.store.data.noticeInfo = res[2].data.filter(
+          (item) => item.dStatus === '0'
+        ).length;
         if (typeof this.getTabBar === 'function' && this.getTabBar()) {
           this.getTabBar().setData({
             info: res[3].data.length,
           });
         }
-        this.update();
       }
+      this.update();
     });
   },
 

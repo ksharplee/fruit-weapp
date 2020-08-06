@@ -1,5 +1,6 @@
 /**app.wxss**/
 @import 'style/basic.wxss';
+@import 'miniprogram_npm/@vant/weapp/common/index.wxss';
 
 page {
   font-size: 13px;

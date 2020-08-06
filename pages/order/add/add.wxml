@@ -60,21 +60,31 @@
     />
     <van-cell
       title="积分优惠"
-      title-class="flex-none"
+      border="{{useJifen ? false : true}}"
     >
-      <view class="">
-        <van-switch
-          slot="right-icon"
-          checked="{{ useJifen }}"
-          active-color="#4cbaab"
-          inactive-color="#fff"
-          size="20px"
-          custom-class="d-inline-block"
-          bind:change="onChangeSwitch"
-        />
-        <view class>您当前有积分{{userInfo.jifen}}，可以抵用￥{{(0 + userInfo.jifen) / 10}}</view>
-      </view>
+      <van-switch
+        slot="right-icon"
+        checked="{{ useJifen }}"
+        active-color="#4cbaab"
+        inactive-color="#fff"
+        size="20px"
+        custom-class="d-inline-block"
+        bind:change="onChangeSwitch"
+      />
     </van-cell>
+    <block wx:if="{{useJifen}}">
+      <van-field
+        value="{{ points }}"
+        label="使用积分"
+        type="number"
+        border="{{false}}"
+        placeholder="请输入抵用积分"
+        input-align="right"
+        bind:input="changeJifen"
+        bind:blur="checkJifen"
+      />
+      <view class="py-2 px-3 text-right text-muted van-hairline--bottom" style="margin-bottom:1px">您当前有积分{{userInfo.jifen}}，可以抵用￥{{(0 + userInfo.jifen) / 10}}</view>
+    </block>
     <van-field
       value="{{ memo }}"
       label="留言"

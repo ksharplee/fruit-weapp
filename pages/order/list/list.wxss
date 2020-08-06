@@ -1,1 +1,21 @@
 /* pages/order/list/list.wxss */
+
+/* page {
+  --card-background-color: #fafafa !important;
+} */
+
+.van-cell__title {
+  font-weight: bold;
+}
+
+.van-cell__label {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #969799;
+}
+
+/* .van-cell__value,
+.panel-index--van-panel__header-value {
+  font-weight: nromal !important;
+} */
